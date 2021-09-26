@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Task;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
@@ -23,7 +24,6 @@ class UserController extends AbstractController
         $this->entityManager = $entityManager;
         $this->encoder = $encoder;
     }
-
 
     /**
      * @Route("/users", name="user_list")
@@ -77,5 +77,30 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+    }
+
+    /**
+     * @Route("/users/{id}/delete", name="user_delete")
+     */
+    public function delete(User $user, Request $request): response
+    {
+        //$this->denyAccessUnlessGranted('author_delete', $trick, "Vous n'avez pas le droit de supprimer cette figure.");
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+
+            $tasks = $user->getTasks();
+            foreach ($tasks as $task) {
+                $anonymousUser = $this->entityManager->getRepository(User::class)->findByUsername('Utilisateur anonyme')[0];
+                /**
+                 * @var Task $task
+                 */
+                $task->setUser($anonymousUser);
+            }
+
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+            $this->addFlash('success', "L'utilisateur a bien été supprimé");
+        }
+
+        return $this->redirectToRoute('user_list', [], Response::HTTP_SEE_OTHER);
     }
 }

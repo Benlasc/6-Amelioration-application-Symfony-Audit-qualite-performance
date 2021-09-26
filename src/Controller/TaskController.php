@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Form\TaskType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +25,9 @@ class TaskController extends AbstractController
      */
     public function list(): Response
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository(Task::class)->findAll()]);
+        $tasks = (in_array('ROLE_ADMIN',$this->getUser()->getRoles())) ? $this->entityManager->getRepository(Task::class)->findAll() : $this->getUser()->getTasks() ;
+
+        return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
 
     /**
@@ -32,13 +35,13 @@ class TaskController extends AbstractController
      */
     public function create(Request $request): response
     {
-        $task = new Task();
+        $task = new Task($this->entityManager->getRepository(User::class));
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+            $task->setUser($this->getUser());
             $this->entityManager->persist($task);
             $this->entityManager->flush();
 
