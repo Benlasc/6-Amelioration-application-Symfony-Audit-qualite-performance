@@ -20,6 +20,7 @@
 						<th>#</th>
 						<th>Nom d'utilisateur</th>
 						<th>Adresse d'utilisateur</th>
+						<th>Rôles</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -29,9 +30,10 @@
 							<th scope="row">{{ loop.index }}</th>
 							<td>{{ user.username }}</td>
 							<td>{{ user.email }}</td>
+							<td>{{ user.roles|join(', ') }}</td>
 							<td>
 								<a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
-								{% if user.username != 'Admin' and user.username != 'Utilisateur anonyme' %}
+								{% if user.username != 'Admin' and user.username != 'Utilisateur anonyme' and user.username != app.user.username %}
 									<form method="post" style="display: inline-block;" action="{{ path('user_delete', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
 										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
 										<button class="btn btn-danger btn-sm">Delete</button>
