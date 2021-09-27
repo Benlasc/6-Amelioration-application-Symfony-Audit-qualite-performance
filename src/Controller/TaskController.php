@@ -58,6 +58,11 @@ class TaskController extends AbstractController
      */
     public function edit(Task $task, Request $request)
     {
+        if (!$this->isGranted('task_edit', $task)) {
+            $this->addFlash('error', "Vous n'êtes pas l'auteur de cette tache.");
+            return $this->redirectToRoute('task_list');
+        }
+
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -94,7 +99,11 @@ class TaskController extends AbstractController
      */
     public function deleteTask(Task $task): response
     {
-        
+        if (!$this->isGranted('task_delete', $task)) {
+            $this->addFlash('error', "Vous n'êtes pas l'auteur de cette tache.");
+            return $this->redirectToRoute('task_list');
+        }
+
         $this->entityManager->remove($task);
         $this->entityManager->flush();
 
