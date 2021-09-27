@@ -14,8 +14,8 @@
                     </h4>
                     <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
                     <p>{{ task.content }}</p>
-                    {% if app.user.roles[0] == 'ROLE_ADMIN' %}
-                        <p><u>Auteur</u> : {{ task.user.username }}</p>
+                    {% if 'ROLE_ADMIN' in app.user.roles %}
+                        <p><u>Auteur</u> : {{ task.user.username }} ({{ task.user.email }})</p>
                     {% endif %}
                 </div>
                 <div>
