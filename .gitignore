@@ -24,3 +24,5 @@ debugContainer.txt
 .vscode
 notes.bat
 go.bat
+commande.bat
+.env.test
