@@ -45,6 +45,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "liip/test-fixtures-bundle": "^2.0",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "5.3.*",
         "symfony/css-selector": "5.3.*",
@@ -52,7 +53,8 @@
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^5.3",
         "symfony/stopwatch": "5.3.*",
-        "symfony/web-profiler-bundle": "5.3.*"
+        "symfony/web-profiler-bundle": "5.3.*",
+        "theofidry/alice-data-fixtures": "^1.4"
     },
     "config": {
         "optimize-autoloader": true,
