@@ -11,11 +11,11 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
+use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
- * @UniqueEntity("email")
+ * @UniqueEntity("email", message="Ce mail est déjà pris")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -73,7 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->username;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
@@ -96,16 +96,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
+        if ($roles !== ['ROLE_ADMIN']) {
+            $roles[] = 'ROLE_USER';
+        }
         return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
+        
         return $this;
     }
 
@@ -149,7 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -184,5 +184,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
-    } 
+    }
 }

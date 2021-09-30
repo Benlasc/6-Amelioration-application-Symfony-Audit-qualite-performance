@@ -1,114 +1,20 @@
-[28-Sep-2021 15:14:54 Europe/Paris] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function App\Tests\Entity\UserTest::__construct(), 0 passed in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php on line 138 and exactly 1 expected in C:\Users\Benoit\Desktop\TodoList\tests\Entity\UserTest.php:13
+[29-Sep-2021 15:37:48 Europe/Paris] PHP Fatal error:  Uncaught Error: Using $this when not in object context in C:\Users\Benoit\Desktop\TodoList\tests\Controller\UserControllerTest.php:180
 Stack trace:
-#0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(138): App\Tests\Entity\UserTest->__construct()
-#1 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(68): PHPUnit\Framework\TestBuilder->buildTestWithoutData('App\\Tests\\Entit...')
-#2 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(884): PHPUnit\Framework\TestBuilder->build(Object(ReflectionClass), 'testValidEntity')
-#3 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(236): PHPUnit\Framework\TestSuite->addTestMethod(Object(ReflectionClass), Object(ReflectionMethod))
-#4 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(366): PHPUnit\Framework\TestSuite->__construct(Object(ReflectionClass))
-#5 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(505): PHPUnit\Framework\TestSuite->addTestSuite(Object(ReflectionClass))
-#6 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(530): PHPUnit\Framework\TestSuite->addTestFile('C:\\Users\\Benoit...')
-#7 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\TestSuiteMapper.php(67): PHPUnit\Framework\TestSuite->addTestFiles(Array)
-#8 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(390): PHPUnit\TextUI\TestSuiteMapper->map(Object(PHPUnit\TextUI\XmlConfiguration\TestSuiteCollection), '')
-#9 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(111): PHPUnit\TextUI\Command->handleArguments(Array)
-#10 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(96): PHPUnit\TextUI\Command->run(Array, true)
-#11 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
-#12 {main}
+#0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Util\FileLoader.php(65): include_once()
+#1 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Util\FileLoader.php(49): PHPUnit\Util\FileLoader::load('C:\\Users\\Benoit...')
+#2 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(402): PHPUnit\Util\FileLoader::checkAndLoad('C:\\Users\\Benoit...')
+#3 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(530): PHPUnit\Framework\TestSuite->addTestFile('C:\\Users\\Benoit...')
+#4 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\TestSuiteMapper.php(67): PHPUnit\Framework\TestSuite->addTestFiles(Array)
+#5 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(390): PHPUnit\TextUI\TestSuiteMapper->map(Object(PHPUnit\TextUI\XmlConfiguration\TestSuiteCollection), '')
+#6 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(111): PHPUnit\TextUI\Command->handleArguments(Array)
+#7 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(96): PHPUnit\TextUI\Command->run(Array, true)
+#8 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
+#9 {main}
 
-Next PHPUnit\TextUI\RuntimeException: Too few arguments to function App\Tests\Entity\UserTest::__construct(), 0 passed in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php on line 138 and exactly 1 expected in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php:98
+Next PHPUnit\TextUI\RuntimeException: Using $this when not in object context in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php:98
 Stack trace:
 #0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
 #1 {main}
   thrown in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php on line 98
-[28-Sep-2021 15:21:16 Europe/Paris] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function App\Tests\Entity\UserTest::__construct(), 0 passed in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php on line 138 and exactly 4 expected in C:\Users\Benoit\Desktop\TodoList\tests\Entity\UserTest.php:0
-Stack trace:
-#0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(138): App\Tests\Entity\UserTest->__construct()
-#1 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(117): PHPUnit\Framework\TestBuilder->buildTestWithoutData('App\\Tests\\Entit...')
-#2 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(884): PHPUnit\Framework\TestBuilder->build(Object(ReflectionClass), 'testValidEntity')
-#3 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(236): PHPUnit\Framework\TestSuite->addTestMethod(Object(ReflectionClass), Object(ReflectionMethod))
-#4 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(366): PHPUnit\Framework\TestSuite->__construct(Object(ReflectionClass))
-#5 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(505): PHPUnit\Framework\TestSuite->addTestSuite(Object(ReflectionClass))
-#6 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(530): PHPUnit\Framework\TestSuite->addTestFile('C:\\Users\\Benoit...')
-#7 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\TestSuiteMapper.php(67): PHPUnit\Framework\TestSuite->addTestFiles(Array)
-#8 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(390): PHPUnit\TextUI\TestSuiteMapper->map(Object(PHPUnit\TextUI\XmlConfiguration\TestSuiteCollection), '')
-#9 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(111): PHPUnit\TextUI\Command->handleArguments(Array)
-#10 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(96): PHPUnit\TextUI\Command->run(Array, true)
-#11 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
-#12 {main}
-
-Next PHPUnit\TextUI\RuntimeException: Too few arguments to function App\Tests\Entity\UserTest::__construct(), 0 passed in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php on line 138 and exactly 4 expected in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php:98
-Stack trace:
-#0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
-#1 {main}
-  thrown in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php on line 98
-[28-Sep-2021 15:21:48 Europe/Paris] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function App\Tests\Entity\UserTest::__construct(), 0 passed in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php on line 138 and exactly 4 expected in C:\Users\Benoit\Desktop\TodoList\tests\Entity\UserTest.php:0
-Stack trace:
-#0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(138): App\Tests\Entity\UserTest->__construct()
-#1 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(117): PHPUnit\Framework\TestBuilder->buildTestWithoutData('App\\Tests\\Entit...')
-#2 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(884): PHPUnit\Framework\TestBuilder->build(Object(ReflectionClass), 'testValidEntity')
-#3 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(236): PHPUnit\Framework\TestSuite->addTestMethod(Object(ReflectionClass), Object(ReflectionMethod))
-#4 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(366): PHPUnit\Framework\TestSuite->__construct(Object(ReflectionClass))
-#5 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(505): PHPUnit\Framework\TestSuite->addTestSuite(Object(ReflectionClass))
-#6 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(530): PHPUnit\Framework\TestSuite->addTestFile('C:\\Users\\Benoit...')
-#7 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\TestSuiteMapper.php(67): PHPUnit\Framework\TestSuite->addTestFiles(Array)
-#8 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(390): PHPUnit\TextUI\TestSuiteMapper->map(Object(PHPUnit\TextUI\XmlConfiguration\TestSuiteCollection), '')
-#9 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(111): PHPUnit\TextUI\Command->handleArguments(Array)
-#10 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(96): PHPUnit\TextUI\Command->run(Array, true)
-#11 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
-#12 {main}
-
-Next PHPUnit\TextUI\RuntimeException: Too few arguments to function App\Tests\Entity\UserTest::__construct(), 0 passed in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php on line 138 and exactly 4 expected in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php:98
-Stack trace:
-#0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
-#1 {main}
-  thrown in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php on line 98
-[28-Sep-2021 15:23:37 Europe/Paris] PHP Fatal error:  Uncaught Error: Cannot instantiate interface Symfony\Component\Validator\Validator\ValidatorInterface in C:\Users\Benoit\Desktop\TodoList\tests\Entity\UserTest.php:16
-Stack trace:
-#0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(138): App\Tests\Entity\UserTest->__construct()
-#1 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(117): PHPUnit\Framework\TestBuilder->buildTestWithoutData('App\\Tests\\Entit...')
-#2 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(884): PHPUnit\Framework\TestBuilder->build(Object(ReflectionClass), 'testValidEntity')
-#3 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(236): PHPUnit\Framework\TestSuite->addTestMethod(Object(ReflectionClass), Object(ReflectionMethod))
-#4 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(366): PHPUnit\Framework\TestSuite->__construct(Object(ReflectionClass))
-#5 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(505): PHPUnit\Framework\TestSuite->addTestSuite(Object(ReflectionClass))
-#6 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(530): PHPUnit\Framework\TestSuite->addTestFile('C:\\Users\\Benoit...')
-#7 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\TestSuiteMapper.php(67): PHPUnit\Framework\TestSuite->addTestFiles(Array)
-#8 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(390): PHPUnit\TextUI\TestSuiteMapper->map(Object(PHPUnit\TextUI\XmlConfiguration\TestSuiteCollection), '')
-#9 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(111): PHPUnit\TextUI\Command->handleArguments(Array)
-#10 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(96): PHPUnit\TextUI\Command->run(Array, true)
-#11 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
-#12 {main}
-
-Next PHPUnit\TextUI\RuntimeException: Cannot instantiate interface Symfony\Component\Validator\Validator\ValidatorInterface in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php:98
-Stack trace:
-#0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
-#1 {main}
-  thrown in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php on line 98
-[28-Sep-2021 15:28:21 Europe/Paris] PHP Fatal error:  Uncaught Symfony\Component\Filesystem\Exception\IOException: Cannot rename "C:\Users\Benoit\Desktop\TodoList\var\cache\test\Container6fTRPzM\getE167.tmp" to "C:\Users\Benoit\Desktop\TodoList/var/cache/test/Container6fTRPzM/getNelmioAlice_Generator_NamedArgumentsResolverService.php": rename(C:\Users\Benoit\Desktop\TodoList\var\cache\test\Container6fTRPzM\getE167.tmp,C:\Users\Benoit\Desktop\TodoList/var/cache/test/Container6fTRPzM/getNelmioAlice_Generator_NamedArgumentsResolverService.php): Accès refusé (code: 5) in C:\Users\Benoit\Desktop\TodoList\vendor\symfony\filesystem\Filesystem.php:305
-Stack trace:
-#0 C:\Users\Benoit\Desktop\TodoList\vendor\symfony\filesystem\Filesystem.php(683): Symfony\Component\Filesystem\Filesystem->rename('C:\\Users\\Benoit...', 'C:\\Users\\Benoit...', true)
-#1 C:\Users\Benoit\Desktop\TodoList\vendor\symfony\http-kernel\Kernel.php(741): Symfony\Component\Filesystem\Filesystem->dumpFile('C:\\Users\\Benoit...', '<?php\n\nnamespac...')
-#2 C:\Users\Benoit\Desktop\TodoList\vendor\symfony\http-kernel\Kernel.php(555): Symfony\Component\HttpKernel\Kernel->dumpContainer(Object(Symfony\Component\Config\ConfigCache), Object(Symfony\Component\DependencyInjection\ContainerBuilder), 'App_KernelTestD...', 'Container')
-#3 C:\Users\Benoit\Desktop\TodoList\vendor\symfony\http-kernel\Kernel.php(786): Symfony\Component\HttpKernel\Kernel->initializeContainer()
-#4 C:\Users\Benoit\Desktop\TodoList\vendor\symfony\http-kernel\Kernel.php(125): Symfony\Component\HttpKernel\Kernel->preBoot()
-#5 C:\Users\Benoit\Desktop\TodoList\vendor\symfony\framework-bundle\Test\KernelTestCase.php(83): Symfony\Component\HttpKernel\Kernel->boot()
-#6 C:\Users\Benoit\Desktop\TodoList\vendor\symfony\framework-bundle\Test\KernelTestCase.php(103): Symfony\Bundle\FrameworkBundle\Test\KernelTestCase::bootKernel()
-#7 C:\Users\Benoit\Desktop\TodoList\tests\Entity\UserTest.php(16): Symfony\Bundle\FrameworkBundle\Test\KernelTestCase::getContainer()
-#8 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(138): App\Tests\Entity\UserTest->__construct()
-#9 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestBuilder.php(117): PHPUnit\Framework\TestBuilder->buildTestWithoutData('App\\Tests\\Entit...')
-#10 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(884): PHPUnit\Framework\TestBuilder->build(Object(ReflectionClass), 'testValidEntity')
-#11 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(236): PHPUnit\Framework\TestSuite->addTestMethod(Object(ReflectionClass), Object(ReflectionMethod))
-#12 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(366): PHPUnit\Framework\TestSuite->__construct(Object(ReflectionClass))
-#13 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(505): PHPUnit\Framework\TestSuite->addTestSuite(Object(ReflectionClass))
-#14 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\Framework\TestSuite.php(530): PHPUnit\Framework\TestSuite->addTestFile('C:\\Users\\Benoit...')
-#15 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\TestSuiteMapper.php(67): PHPUnit\Framework\TestSuite->addTestFiles(Array)
-#16 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(390): PHPUnit\TextUI\TestSuiteMapper->map(Object(PHPUnit\TextUI\XmlConfiguration\TestSuiteCollection), '')
-#17 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(111): PHPUnit\TextUI\Command->handleArguments(Array)
-#18 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php(96): PHPUnit\TextUI\Command->run(Array, true)
-#19 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
-#20 {main}
-
-Next PHPUnit\TextUI\RuntimeException: Cannot rename "C:\Users\Benoit\Desktop\TodoList\var\cache\test\Container6fTRPzM\getE167.tmp" to "C:\Users\Benoit\Desktop\TodoList/var/cache/test/Container6fTRPzM/getNelmioAlice_Generator_NamedArgumentsResolverService.php": rename(C:\Users\Benoit\Desktop\TodoList\var\cache\test\Container6fTRPzM\getE167.tmp,C:\Users\Benoit\Desktop\TodoList/var/cache/test/Container6fTRPzM/getNelmioAlice_Generator_NamedArgumentsResolverService.php): Accès refusé (code: 5) in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php:98
-Stack trace:
-#0 C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\phpunit(92): PHPUnit\TextUI\Command::main()
-#1 {main}
-  thrown in C:\Users\Benoit\Desktop\TodoList\vendor\phpunit\phpunit\src\TextUI\Command.php on line 98
-[28-Sep-2021 15:30:51 Europe/Paris] PHP Fatal error:  Constant expression contains invalid operations in C:\Users\Benoit\Desktop\TodoList\tests\Entity\UserTest.php on line 11
+[29-Sep-2021 18:26:04 Europe/Paris] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 50348032 bytes) in C:\Users\Benoit\Desktop\TodoList\tests\Controller\UserControllerTest.php on line 242
+[29-Sep-2021 18:26:26 Europe/Paris] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 50348032 bytes) in C:\Users\Benoit\Desktop\TodoList\tests\Controller\UserControllerTest.php on line 242

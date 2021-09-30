@@ -10,15 +10,12 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class SecurityControllerTest extends WebTestCase
 {
-    const BASE_HOST = 'http://localhost';
-
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
 
     /** @var KernelBrowser */
     private $client = null;
 
-    //se lance avant chaque test
     public function setUp(): void
     {
         $this->client = static::createClient();
@@ -39,11 +36,11 @@ class SecurityControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form([
-            '_username' => 'john@doe.fr',
-            '_password' => 'fakepassword',
+            'username' => 'john@doe.fr',
+            'password' => 'fakepassword',
         ]);
         $this->client->submit($form);
-        $this->assertResponseRedirects(self::BASE_HOST.'/login');
+        $this->assertResponseRedirects('/login');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-danger');
     }
@@ -51,14 +48,14 @@ class SecurityControllerTest extends WebTestCase
     public function testSuccesfullLogin()
     {
         $this->databaseTool->loadAliceFixture([
-            __DIR__ . './users.yaml',
+            __DIR__ . '/UserTestFixtures.yaml',
         ]);
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form([
-            'email' => 'john@doe.fr',
-            'password' => '000000',
+            'username' => 'User1',
+            'password' => '121212',
         ]);
         $this->client->submit($form);
-        $this->assertResponseRedirects('/auth');
+        $this->assertResponseRedirects('/');
     }
 }

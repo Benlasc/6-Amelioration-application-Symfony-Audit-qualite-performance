@@ -18,24 +18,23 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
         main:
             lazy: true
             provider: app_user_provider
-            
-            pattern: ^/
-            form_login:
-                login_path: login
-                check_path: login_check
-                always_use_default_target_path:  true
-                default_target_path:  /
-            logout: ~
+            custom_authenticator: App\Security\UserAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used

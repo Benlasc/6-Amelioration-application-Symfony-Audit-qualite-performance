@@ -68,9 +68,9 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($this->encoder->hashPassword($user, $user->getPassword()));
-
+            $role = $request->request->all()['user']['roles'];
+            $user->setRoles((array) $role );
             $this->entityManager->flush();
-
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
             return $this->redirectToRoute('user_list');
@@ -84,9 +84,9 @@ class UserController extends AbstractController
      */
     public function delete(User $user, Request $request): response
     {
-        //$this->denyAccessUnlessGranted('author_delete', $trick, "Vous n'avez pas le droit de supprimer cette figure.");
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
 
+            // The tasks of deleted users are linked to the anonymous user
             $tasks = $user->getTasks();
             foreach ($tasks as $task) {
                 $anonymousUser = $this->entityManager->getRepository(User::class)->findByUsername('Utilisateur anonyme')[0];
