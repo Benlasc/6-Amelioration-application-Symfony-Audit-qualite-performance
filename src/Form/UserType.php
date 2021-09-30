@@ -23,7 +23,7 @@ class UserType extends AbstractType
                     'User' => 'ROLE_USER',
                     'Administrator' => 'ROLE_ADMIN'
                 ],
-                'multiple' => true,
+                'mapped' => false,
                 'required' => true,
             ])
             ->add('password', RepeatedType::class, [

@@ -1,5 +1,5 @@
 App\Entity\User:
   user:
-    username: user1>
+    username: user1
     email: user1\@domain.fr
     password: "1234"

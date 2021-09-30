@@ -1,11 +1,11 @@
 App\Entity\User:
   user_user:
-    username: "User"
-    email: "user\\@domain.fr"
-    roles: "[]"
-    password: "\\$2a\\$12\\$HWm1NzRE5x32xb3ru79Piu0v6LiaFeoKYCkr3yVZqqvzy0yk5YlZG"
+    username: "User1"
+    email: "user1\\@domain.fr"
+    roles: "[ROLE_USER]"
+    password: "\\$2y\\$10\\$E15mxv5krPVnJN2dC9JkHe0xPbAZBNqpxs3MVKW6QfwegUcrzEsGK"
   user_admin:
     username: "Admin"
-    email: "admin@domain.fr"
-    roles: ["ROLE_ADMIN"]
-    password: "\\$2a\\$12\\$HWm1NzRE5x32xb3ru79Piu0v6LiaFeoKYCkr3yVZqqvzy0yk5YlZG"
+    email: "admin\\@domain.fr"
+    roles: "[ROLE_ADMIN]"
+    password: "\\$2y\\$10\\$vS/qA5ElOr7qYZPQEdh2u.cdVRilE/n0RTw5ql0X5tDqnHv6940eW"

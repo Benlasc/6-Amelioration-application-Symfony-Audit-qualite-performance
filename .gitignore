@@ -26,3 +26,5 @@ notes.bat
 go.bat
 commande.bat
 .env.test
+php_errors.log
+.phpunit.result.cache
