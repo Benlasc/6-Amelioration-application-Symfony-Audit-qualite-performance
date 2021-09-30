@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use App\Repository\UserRepository;
 use App\Tests\NeedLogin;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -35,7 +34,7 @@ class UserControllerTest extends WebTestCase
     public function AdminRequest(string $method = 'GET', string $url = '/'): Crawler
     {
         $users = $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/UserTestFixtures.yaml',
+            __DIR__ . '/fixtures/UserTestFixtures.yaml',
         ]);
         
         $adminUser = $users['user_admin'];
@@ -45,7 +44,7 @@ class UserControllerTest extends WebTestCase
 
     // Users page access
 
-    public function testRedirectToLogin(): void
+    public function testRedirectToLoginIfNotAuthenticated(): void
     {
         $crawler = $this->client->request('GET', '/users');
         $this->assertResponseRedirects('/login');
@@ -53,12 +52,11 @@ class UserControllerTest extends WebTestCase
 
     public function testUnauthorizedAccessForUser(): void
     {
-        $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/UserTestFixtures.yaml',
+        $users = $this->databaseTool->loadAliceFixture([
+            __DIR__ . '/fixtures/UserTestFixtures.yaml',
         ]);
-        
-        $User = static::getContainer()->get(UserRepository::class)->find(1);
-        $this->login($this->client, $User);
+        $user = $users['user_user'];
+        $this->login($this->client, $user);
         $crawler = $this->client->request('GET', '/users');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
@@ -151,7 +149,7 @@ class UserControllerTest extends WebTestCase
         $link = $crawler->selectLink('Edit')->link();
         $crawler = $this->client->click($link);
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Modifier User1');
+        $this->assertSelectorTextContains('h1', 'Modifier');
     }
 
     // Successful upgrade
@@ -212,7 +210,7 @@ class UserControllerTest extends WebTestCase
     // Email already used
     public function testfailedUserUpdate3(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users/1/edit');
+        $crawler = $this->AdminRequest('GET', '/users/3/edit');
 
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => 'User4',
@@ -228,23 +226,15 @@ class UserControllerTest extends WebTestCase
 
     // === User delete ===
 
-    // Email already used
     public function testSuccessfulUserDelete(): void
-    {
-        $users = $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/UserTestFixtures.yaml',
-        ]);
-        
-        $adminUser = $users['user_admin'];
+    {      
+        $crawler = $this->AdminRequest('GET', 'users');
 
-        $this->login($this->client, $adminUser);
-        
-        $crawler = $this->client->request('GET', "users");
         $csrfToken = $crawler->filter('input')->attr('value');
 
         //$csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('delete1');
       
-        $this->client->request('POST', '/users/1/delete', [
+        $this->client->request('POST', '/users/3/delete', [
             '_token' => $csrfToken
         ]);
 

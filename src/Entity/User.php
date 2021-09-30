@@ -185,4 +185,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getDoneTasks(): array
+    {
+        $tasks = $this->tasks;
+        foreach ($tasks as $task) {
+            if ($task->isDone()) {
+                $tasksDone[]=$task;
+            }
+        }
+        return $tasksDone;
+    }
+
+    public function getNotDoneTasks(): array
+    {
+        $tasks = $this->tasks;
+        foreach ($tasks as $task) {
+            if (!$task->isDone()) {
+                $tasksNotDone[]=$task;
+            }
+        }
+        return $tasksNotDone;
+    }
 }

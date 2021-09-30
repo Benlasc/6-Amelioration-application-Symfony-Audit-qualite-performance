@@ -48,7 +48,7 @@ class SecurityControllerTest extends WebTestCase
     public function testSuccesfullLogin()
     {
         $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/UserTestFixtures.yaml',
+            __DIR__ . '/fixtures/UserTestFixtures.yaml',
         ]);
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form([

@@ -23,10 +23,25 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function list(): Response
+    public function list(Request $request): Response
     {
-        $tasks = (in_array('ROLE_ADMIN',$this->getUser()->getRoles())) ? $this->entityManager->getRepository(Task::class)->findAll() : $this->getUser()->getTasks() ;
-
+        $user = $this->getUser();
+        if ($user->getRoles() === ['ROLE_ADMIN']) {
+            $tasks = $this->entityManager->getRepository(Task::class)->findAll();
+        } else {
+            $done = $request->query->get('done') ?? null;
+            if ($done !== null) {
+                if ($done === "true") {
+                    $tasks = $user->getDoneTasks();
+                } elseif ($done === "false") {
+                    $tasks = $user->getNotDoneTasks();
+                } else {
+                    $tasks = $user->getTasks();
+                }
+            } else {
+                $tasks = $user->getTasks();
+            }
+        }
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
 
@@ -86,10 +101,19 @@ class TaskController extends AbstractController
      */
     public function toggleTask(Task $task): response
     {
+        if (!$this->isGranted('task_edit', $task)) {
+            $this->addFlash('error', "Vous n'êtes pas l'auteur de cette tache.");
+            return $this->redirectToRoute('task_list');
+        }
+
         $task->toggle(!$task->isDone());
         $this->getDoctrine()->getManager()->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        if ($task->isDone()) {
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        } else {
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
+        }
 
         return $this->redirectToRoute('task_list');
     }
@@ -97,18 +121,20 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTask(Task $task): response
+    public function deleteTask(Task $task, Request $request): response
     {
-        if (!$this->isGranted('task_delete', $task)) {
-            $this->addFlash('error', "Vous n'êtes pas l'auteur de cette tache.");
-            return $this->redirectToRoute('task_list');
+        if ($this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
+
+            if (!$this->isGranted('task_delete', $task)) {
+                $this->addFlash('error', "Vous n'êtes pas l'auteur de cette tache.");
+                return $this->redirectToRoute('task_list');
+            }
+
+            $this->entityManager->remove($task);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
         }
-
-        $this->entityManager->remove($task);
-        $this->entityManager->flush();
-
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
-
         return $this->redirectToRoute('task_list');
     }
 }

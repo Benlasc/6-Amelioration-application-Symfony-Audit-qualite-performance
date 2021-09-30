@@ -1,0 +1,38 @@
+App\Entity\User:
+  user_anonymous:
+    username: "Utilisateur anonyme"
+    email: "anonyme\\@domain.com"
+    roles: "[ROLE_USER]"
+    password: "\\$2y\\$10\\$mqRaA/P1JvbKkIMTsryfXuj3BP3bKDiA4D13jcQtvDqghD5I8/aju"
+    tasks: "@task_{3..3}"
+  user_admin:
+    username: "Admin"
+    email: "admin\\@domain.fr"
+    roles: "[ROLE_ADMIN]"
+    password: "\\$2y\\$10\\$vS/qA5ElOr7qYZPQEdh2u.cdVRilE/n0RTw5ql0X5tDqnHv6940eW"
+  user_user:
+    username: "User1"
+    email: "user1\\@domain.fr"
+    roles: "[ROLE_USER]"
+    password: "\\$2y\\$10\\$E15mxv5krPVnJN2dC9JkHe0xPbAZBNqpxs3MVKW6QfwegUcrzEsGK"
+    tasks: "@task_{1..2}"
+
+App\Entity\Task:
+  task_1:
+    createdAt: <dateTimeBetween("-50 days", "now")>
+    title: "Tâche 1"
+    content: "Contenu de la première tâche"
+    toggle: true
+    user: "@user_user"
+  task_2:
+    createdAt: <dateTimeBetween("-50 days", "now")>
+    title: "Tâche 2"
+    content: "Contenu de la deuxième tâche"
+    toggle: false
+    user: "@user_user"
+  task_3:
+    createdAt: <dateTimeBetween("-50 days", "now")>
+    title: "Tâche 3"
+    content: "Contenu de la troisième tâche"
+    toggle: false
+    user: "@user_anonymous"
