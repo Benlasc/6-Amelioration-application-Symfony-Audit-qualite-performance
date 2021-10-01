@@ -2,26 +2,11 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\Utils\CustomWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
-class SecurityControllerTest extends WebTestCase
+class SecurityControllerTest extends CustomWebTestCase
 {
-    /** @var AbstractDatabaseTool */
-    protected $databaseTool;
-
-    /** @var KernelBrowser */
-    private $client = null;
-
-    public function setUp(): void
-    {
-        $this->client = static::createClient();
-        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
-    }
-
     public function testDisplayLogin()
     {
         $this->client->request('GET', '/login');
@@ -36,7 +21,7 @@ class SecurityControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form([
-            'username' => 'john@doe.fr',
+            'username' => 'fakemail@domain.fr',
             'password' => 'fakepassword',
         ]);
         $this->client->submit($form);
@@ -48,7 +33,7 @@ class SecurityControllerTest extends WebTestCase
     public function testSuccesfullLogin()
     {
         $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/fixtures/UserTestFixtures.yaml',
+            __DIR__ . '/../Utils/fixtures/DataTestFixtures.yaml',
         ]);
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form([
@@ -58,4 +43,12 @@ class SecurityControllerTest extends WebTestCase
         $this->client->submit($form);
         $this->assertResponseRedirects('/');
     }
+
+    public function testRedirectToHomepageIfAuthenticated()
+    {       
+        $this->UserRequest('GET', '/login');
+
+        $this->assertResponseRedirects('/');
+        $this->client->followRedirect();
+    }    
 }
