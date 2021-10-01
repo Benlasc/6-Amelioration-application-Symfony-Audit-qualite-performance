@@ -2,46 +2,11 @@
 
 namespace App\Tests\Controller;
 
-use App\Tests\NeedLogin;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DomCrawler\Crawler;
+use App\Tests\Utils\CustomWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserControllerTest extends WebTestCase
+class UserControllerTest extends CustomWebTestCase
 {
-    use NeedLogin;
-
-    /**
-     * @var KernelBrowser $client
-     */
-    protected $client;
-
-    public function setUp(): void
-    {
-        $this->client = static::createClient();
-        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
-    }
-
-    /**
-     * Get admin from the database test, authenticate him and execute the request
-     * @param string $method
-     * @param string $url
-     * 
-     * @return Crawler
-     */
-    public function AdminRequest(string $method = 'GET', string $url = '/'): Crawler
-    {
-        $users = $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/fixtures/UserTestFixtures.yaml',
-        ]);
-        
-        $adminUser = $users['user_admin'];
-        $this->login($this->client, $adminUser);
-        return $this->client->request($method, $url);
-    }
-
     // Users page access
 
     public function testRedirectToLoginIfNotAuthenticated(): void
@@ -52,10 +17,8 @@ class UserControllerTest extends WebTestCase
 
     public function testUnauthorizedAccessForUser(): void
     {
-        $users = $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/fixtures/UserTestFixtures.yaml',
-        ]);
-        $user = $users['user_user'];
+        $this->loadFixture();
+        $user = $this->database['user_user'];
         $this->login($this->client, $user);
         $crawler = $this->client->request('GET', '/users');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -63,7 +26,7 @@ class UserControllerTest extends WebTestCase
 
     public function testAuthorizedAccessForAdmin(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users');
+        $crawler = $this->UserRequest('GET', '/users', null, 'admin');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Liste des utilisateurs');
     }
@@ -72,7 +35,7 @@ class UserControllerTest extends WebTestCase
 
     public function testSuccessfulUserCreation(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users/create');
+        $crawler = $this->UserRequest('GET', '/users/create', null, 'admin');
 
         $form = $crawler->selectButton('Ajouter')->form([
             'user[username]' => 'User3',
@@ -92,7 +55,7 @@ class UserControllerTest extends WebTestCase
     // Email already used
     public function testfailedUserCreation1(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users/create');
+        $crawler = $this->UserRequest('GET', '/users/create', null, 'admin');      
 
         $form = $crawler->selectButton('Ajouter')->form([
             'user[username]' => 'User4',
@@ -109,7 +72,7 @@ class UserControllerTest extends WebTestCase
     // The passwords are different
     public function testfailedUserCreation2(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users/create');
+        $crawler = $this->UserRequest('GET', '/users/create', null, 'admin');
 
         $form = $crawler->selectButton('Ajouter')->form([
             'user[username]' => 'User4',
@@ -126,7 +89,7 @@ class UserControllerTest extends WebTestCase
     // Missing data (username and email)
     public function testfailedUserCreation3(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users/create');
+        $crawler = $this->UserRequest('GET', '/users/create', null, 'admin');
 
         $form = $crawler->selectButton('Ajouter')->form([
             'user[username]' => '',
@@ -144,7 +107,7 @@ class UserControllerTest extends WebTestCase
     // Access to the user update page
     public function testUpdateAccess(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users');
+        $crawler = $this->UserRequest('GET', '/users', null, 'admin');
 
         $link = $crawler->selectLink('Edit')->link();
         $crawler = $this->client->click($link);
@@ -155,7 +118,7 @@ class UserControllerTest extends WebTestCase
     // Successful upgrade
     public function testSuccessfulUserUpdate(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users/1/edit');
+        $crawler = $this->UserRequest('GET', '/users/1/edit', null, 'admin');
 
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => 'User5',
@@ -177,7 +140,7 @@ class UserControllerTest extends WebTestCase
     // Missing data (username and email)
     public function testfailedUserUpdate(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users/1/edit');
+        $crawler = $this->UserRequest('GET', '/users/1/edit', null, 'admin');
 
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => '',
@@ -193,7 +156,7 @@ class UserControllerTest extends WebTestCase
     // The passwords are different
     public function testfailedUserUpdate2(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users/1/edit');
+        $crawler = $this->UserRequest('GET', '/users/1/edit', null, 'admin');
 
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => 'User4',
@@ -210,7 +173,7 @@ class UserControllerTest extends WebTestCase
     // Email already used
     public function testfailedUserUpdate3(): void
     {
-        $crawler = $this->AdminRequest('GET', '/users/3/edit');
+        $crawler = $this->UserRequest('GET', '/users/3/edit', null, 'admin');
 
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => 'User4',
@@ -228,7 +191,7 @@ class UserControllerTest extends WebTestCase
 
     public function testSuccessfulUserDelete(): void
     {      
-        $crawler = $this->AdminRequest('GET', 'users');
+        $crawler = $this->UserRequest('GET', '/users', null, 'admin');
 
         $csrfToken = $crawler->filter('input')->attr('value');
 

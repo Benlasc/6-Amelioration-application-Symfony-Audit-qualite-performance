@@ -28,4 +28,6 @@ commande.bat
 .env.test
 php_errors.log
 .phpunit.result.cache
-cover.html
+coverage
+prob.txt
+.githubatt

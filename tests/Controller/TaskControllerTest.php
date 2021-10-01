@@ -2,59 +2,10 @@
 
 namespace App\Tests\Controller;
 
-use App\Tests\NeedLogin;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
+use App\Tests\Utils\CustomWebTestCase;
 
-class TaskControllerTest extends WebTestCase
+class TaskControllerTest extends CustomWebTestCase
 {
-    use NeedLogin;
-
-    /**
-     * @var KernelBrowser $client
-     */
-    protected $client;
-
-    protected $databaseTool;
-
-    protected $database;
-
-    public function setUp(): void
-    {
-        $this->client = static::createClient();
-        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
-        $this->database = $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/fixtures/UserTestFixtures.yaml',
-        ]);
-    }
-
-    /**
-     * Get admin or normal user from the database test, authenticate him and execute the request
-     * @param string $role (user or admin)
-     * @param string $method (GET or POST)
-     * @param string $url
-     * @param array|null $post
-     *
-     * @return Crawler
-     */
-    public function UserRequest(string $method, string $url, ?array $post = null, string $role = 'user', ): Crawler
-    {
-        $user = ($role == 'user') ? $this->database['user_user'] : $this->database['user_admin'] ;
-
-        $this->login($this->client, $user);
-
-        if ($post && $method == 'POST') {
-            return $this->client->request($method, $url, $post);
-        } else {
-            return $this->client->request($method, $url);
-        }
-    }
-
-    // Tasks page access
-
     public function testRedirectToLoginIfNotAuthenticated(): void
     {
         $this->client->request('GET', '/tasks');
@@ -133,6 +84,7 @@ class TaskControllerTest extends WebTestCase
 
     public function testUnauthorizedTaskRemoval(): void
     {
+        $this->loadFixture();
         $taskId = $this->database['task_3']->getId();
         $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('delete'.$taskId);
 
