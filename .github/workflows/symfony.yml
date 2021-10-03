@@ -41,5 +41,9 @@ jobs:
       run: |
         php bin/console doctrine:database:create --if-not-exists --env=test
         php bin/console doctrine:schema:update --env=test --force
+
+    - name: Static analysis of PHP code (PHPStan)
+      run: vendor/bin/phpstan analyse -c PHPStan/phpstan.neon --memory-limit=1G
+
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: vendor/bin/phpunit

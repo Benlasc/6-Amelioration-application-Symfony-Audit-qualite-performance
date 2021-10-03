@@ -30,4 +30,4 @@ php_errors.log
 .phpunit.result.cache
 coverage
 prob.txt
-.githubatt
+note.txt

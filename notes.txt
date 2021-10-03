@@ -1,0 +1,406 @@
+Notes
+
+    Sources : https://blog.martinhujer.cz/how-to-configure-phpstan-for-symfony-applications/
+
+    ‎PHPStan est un outil d’analyse statique PHP. PHPStan se concentre sur la recherche d’erreurs dans votre code sans l’exécuter réellement.
+
+    Installation
+
+        composer require --dev phpstan/phpstan
+
+    Lancement de l'analsyse
+
+        ./vendor/bin/phpstan analyse src public
+
+        Drapeaux
+
+            --level 8
+
+                va de 0 à 8
+    
+    Création du fichier de configuration 
+    (permet de lancer une analyse en faisant juste ./vendor/bin/phpstan analyse -c myPHPStanConfig.neon")
+
+        Contenu du fichier (phpstan.neon.dist à placer à la racine du projet)
+        Rem -> dans d'autres tutos, c'est juste phpstan.neon
+
+            parameters:
+                level: 8
+            paths: (dossiers à analyser)
+                - src
+                - public
+
+        Ignorer certaines erreurs :
+
+            Nous pouvons y utiliser des expressions régulières, donc j'ignorerai toutes les erreurs commençant par "PHPDoc tag..."
+
+            parameters:
+                ignoreErrors:
+                    - '#PHPDoc tag .#'
+
+            Faire taire quelques autres bugs mineurs :
+
+                parameters:
+                    ignoreErrors:
+                        - '#PHPDoc tag .#'
+                        - '#. typehint specified#'
+                        - '#. return statement is missing#'
+                        - '#Return typehint of method .#'
+                        - '#Call to an undefined method Psr\\Container\\ContainerInterface::getParameter\(\)#'
+                        - '#Call to an undefined method Doctrine\\ORM\\EntityRepository<.+>::find.+\(\).#'         
+
+    Utilisation de PHPStan dans un script Composer
+
+        "scripts": {
+            "phpstan": "phpstan analyse -c phpstan.neon src tests --level 7 --no-progress", 
+            "tests": "phpunit",    
+            "ci": [
+                "@phpstan",
+                "@tests"
+            ],
+        }
+
+        Lorsque vous lancerez composer ci, composer exécutera à la fois les scripts phpstan et tests 
+
+        Remarque : avant d'exécuter les scripts, le répertoire de binaires de Composer est temporairement placé au-dessus de la variable d'environnement PATH afin que les binaires des dépendances soient directement accessibles. Dans cet exemple, peu importe que le binaire phpunit se trouve dans vendor/bin/phpunit ou bin/phpunit, il sera trouvé et exécuté.
+
+    Intégration de PHP-STAN dans Symfony
+
+        Pour que les extensions soient configurées automatiquement, vous devez installer phpstan/extension-installer:
+
+            composer require --dev phpstan/extension-installer
+
+        Ignorer tous les problèmes actuels et de laisser PHPStan vérifier uniquement le nouveau code (--generate-baseline)
+
+            vendor/bin/phpstan analyse --level 7 --configuration phpstan.neon src/ tests/ --generate-baseline
+
+                ‎Il génère la liste des erreurs avec le nombre d’occurrences par fichier et l’enregistre sous ‎‎phpstan-baseline.neon‎‎.‎
+
+                ‎Vous devez ensuite inclure ce fichier dans votre configuration principale de phpstan.neon:‎
+
+                    includes:
+                        - phpstan-baseline.neon
+                    parameters:
+                        # your usual configuration options
+                    services:
+                        # your custom extensions
+
+                La prochaine fois que vous exécuterez PHPStan, les erreurs dans la ligne de base seront ignorées dans le résultat de l’analyse. 
+
+        Configuration de l'extension Symfony
+
+            composer require --dev phpstan/phpstan-symfony
+
+            Vous avez peut-être remarqué que PHPStan signale certains problèmes dans le code spécifique à Symfony. C'est parce qu'il n'y a aucun moyen pour PHPStan de comprendre la magie de Symfony uniquement à partir du code lui-même. Cela inclut l'obtention de services à partir de Container, l'utilisation d'arguments et d'options dans les commandes et bien plus encore.
+
+            Pour que ces erreurs disparaissent, vous devez installer l'extension phpstan/phpstan-symfony et fournir à PHPStan un chemin vers le conteneur Symfony compilé en XML(stocké dans le var/cache/dev). 
+            La configuration suivante doit être ajoutée au fichier phpstan.neon :
+
+            parameters:
+                symfony:
+                    # container_xml_path: var/cache/dev/srcDevDebugProjectContainer.xml
+                    # or with Symfony 4.2+
+                    container_xml_path: var/cache/dev/srcApp_KernelDevDebugContainer.xml
+                    # or with Symfony 5+
+                    # container_xml_path: var/cache/dev/App_KernelDevDebugContainer.xml
+
+            PHPStan vérifiera ainsi que vous ne récupérez pas de services inexistants (ou privés) à partir du conteneur.
+
+            Analyse des commandes de la console Symfony‎
+
+                Vous pouvez opter pour une analyse plus avancée des commandes de la console Symfony en fournissant l'application console de votre propre application. Cela permettra de déduire les types d'arguments et d'options corrects lors de l'accès à $input->getArgument() ou $input->getOption().
+
+                De plus, pour que les commandes symfony en console soient correctement analysées, PHPStan a besoin d'un chargeur de console.
+                (les commandes Symfony ? -> https://symfony.com/doc/current/console.html)
+                
+                C'est un script qui initialise la console Symfony pour l'application et la transmet à PHPStan. PHPStan peut utiliser ce script pour déterminer les types d'arguments ou d'options, etc.
+
+                Je mets ce script habituellement dans build/phpstan/console-loader.php:
+
+                    <?php declare(strict_types = 1);
+
+                    use App\Kernel;
+                    use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+                    require dirname(__DIR__) . '/../config/bootstrap.php';
+                    $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+                    return new Application($kernel);
+
+                Version de ce script dans la doc "https://github.com/phpstan/phpstan-symfony#configuration"
+
+                    Symfony 4
+
+                        // tests/console-application.php
+
+                        use App\Kernel;
+                        use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+                        require __DIR__ . '/../config/bootstrap.php';
+                        $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+                        return new Application($kernel);
+
+                    Symfony 5
+
+                        // tests/console-application.php
+
+                        use App\Kernel;
+                        use Symfony\Bundle\FrameworkBundle\Console\Application;
+                        use Symfony\Component\Dotenv\Dotenv;
+
+                        require __DIR__ . '/../vendor/autoload.php';
+
+                        (new Dotenv())->bootEnv(__DIR__ . '/../.env');
+
+                        $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+                        return new Application($kernel);
+
+                Le fichier de configuration phpstan.neon devrait ressembler à ceci :
+
+                    parameters:
+                        symfony:
+                            container_xml_path: var/cache/dev/srcApp_KernelDevDebugContainer.xml
+                            console_application_loader: build/phpstan/console-loader.php
+
+                    Avec cette configuration, PHPStan peut comprendre le code Symfony. 
+
+    Configurer PHP-STAN pour analyser les tests
+
+        Nous utilisons maintenant le même fichier de configuration pour src et tests, mais Symfony utilise un conteneur séparé lorsqu'il fonctionne dans les environnements dev ou test. Cela signifie que PHPStan va signaler des erreurs telles que le service "Doctrine\ORM\EntityManagerInterface" est privé, même si les tests fonctionnent bien.
+
+        La solution est simple : utilisez un fichier de configuration séparé pour src et pour les tests. 
+
+        Nous pouvons garder le fichier phpstan.neon, mais nous devons créer une configuration spécifique pour les tests dans le fichier phpstan-tests.neon. 
+
+        Cela ressemblera beaucoup à la seule modification container_xml_pathqui pointe maintenant vers le conteneur compilé dans var/cache/test
+
+            parameters:
+                symfony:
+                    container_xml_path: var/cache/test/App_KernelTestDebugContainer.xml
+                    console_application_loader: build/phpstan/console-loader.php
+
+        Pour lancer l'analyse on fera :
+
+            phpstan analyse -c phpstan-tests.neon tests --level 7 --no-progress
+
+        Si on veut lancer l'analsyse avec un script composer :
+
+            Vous devez ajuster la configuration scripts dans composer.json pour exécuter PHPStan deux fois - d'abord pour le src répertoire, puis pour le tests avec un fichier de configuration différent. Lorsque vous utilisez cette configuration, vous pouvez toujours exécuter composer phpstan qui à son tour vérifie à la fois srcet test.
+
+            "scripts": {
+                "phpstan-general": "phpstan analyse -c phpstan.neon src --level 7 --no-progress",
+                "phpstan-tests": "phpstan analyse -c phpstan-tests.neon tests --level 7 --no-progress", 
+                "phpstan": [
+                    "@phpstan-general",
+                    "@phpstan-tests"
+                ],
+                "tests": "phpunit",    
+                "ci": [
+                    "@phpstan",
+                    "@tests"
+                ],
+            }
+
+            Une chose que vous devez garder à l'esprit est que le conteneur Symfony doit être compilé avant de pouvoir être utilisé pour l'analyse.
+
+                Vous pouvez le faire en exécutant bin/console cache:warmup --env=devet bin/console cache:warmup --env=test. Comme il doit faire partie de la construction CI, vous pouvez également le mettre dans le compositeurscripts :
+
+                    "phpstan": [
+                        "@php bin/console cache:warmup --env=dev",
+                        "@php bin/console cache:warmup --env=test",
+                        "@phpstan-general",
+                        "@phpstan-tests"
+                    ],
+
+                Ou vous pouvez le mettre dans un script séparé, afin que cela ne vous ralentisse pas lorsque vous exécutez PHPStan à plusieurs reprises sans modifications dans le conteneur (mais vous devez vous assurer que le conteneur est recompilé pour l' testenvironnement après modification).
+
+        Installation de l'extension PHPUnit :
+
+            composer require --dev phpstan/phpstan-phpunit
+
+            Elle sera incluse automatiquement grâce à celui que phpstan/extension-installer nous avons installé au début.
+
+    PHPStan et Doctrine ORM
+
+        Doctrine ORM contient encore plus de choses magiques qui ne peuvent pas être déduites uniquement du code lui-même. Le repository et l'entity manager utilisent le object type à de nombreux endroits, de sorte que PHPStan ne saura pas quel type est présent et vous devrez ajouter beaucoup de PHPDoc en ligne pour le faire fonctionner.
+
+        Vous pouvez installer une phpstan/phpstan-doctrine extension qui aide PHPStan à comprendre la magie de la doctrine.
+
+            composer require --dev phpstan/phpstan-doctrine
+
+        Comme avec l'extension Symfony, vous devez aider l'extension Doctrine en créant un script de chargement qui fournit un entity manager afin que PHPStan puisse l'interroger sur diverses choses. Je mets ce script généralement dans build/phpstan/doctrine-orm-bootstrap.php et le script devrait ressembler à ceci:
+
+            <?php declare(strict_types = 1);
+
+            use App\Kernel;
+
+            require dirname(__DIR__) . '/../config/bootstrap.php';
+            $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+            $kernel->boot();
+            return $kernel->getContainer()->get('doctrine')->getManager(); 
+
+            Dans la doc de phpstan-doctrine, on a :
+
+                Pour Symfony 4
+
+                    // tests/object-manager.php
+
+                    use App\Kernel;
+
+                    require __DIR__ . '/../config/bootstrap.php';
+                    $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+                    $kernel->boot();
+                    return $kernel->getContainer()->get('doctrine')->getManager();
+
+                Pour Symfony 5
+                
+                    // tests/object-manager.php
+
+                    use App\Kernel;
+                    use Symfony\Component\Dotenv\Dotenv;
+
+                    require __DIR__ . '/../vendor/autoload.php';
+
+                    (new Dotenv())->bootEnv(__DIR__ . '/../.env');
+
+                    $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+                    $kernel->boot();
+                    return $kernel->getContainer()->get('doctrine')->getManager();                     
+
+        Vous devez ajouter ceci aux sections respectives dans les deux phpstan.neon et phpstan-tests.neon:   
+
+            parameters:
+                doctrine:
+                    objectManagerLoader: build/phpstan/doctrine-orm-bootstrap.php
+                
+        Avec cette configuration, PHPStan utilisera EntityManager pour vérifier également vos DQL et Query Builders, ce qui est génial.
+        La prochaine version de l'extension PHPStan-Doctrine prendra également en charge l'analyse des annotations d'entité pour déterminer si le type de propriété correspond au type de colonne, si les types de propriété pour les associations sont définis correctement, etc.
+
+    Règles strictes
+
+        Il existe un phpstan/phpstan-strict-rulespackage qui ajoute des vérifications avisées non incluses dans le noyau PHPStan. Vous pouvez l'installer via Composer :
+
+        composer require --dev phpstan/phpstan-strict-rules
+        Et soudain, vous aurez beaucoup plus de problèmes potentiels ou de mauvaises pratiques signalés :-)
+
+    Fichier de configuration PHPStan typique pour un projet Symfony
+
+        Voici un fichier de configuration PHPStan typique pour un projet Symfony. J'ai ajouté des liens vers la documentation afin de voir la signification de chaque paramètre. Il y a quelques plugins à installer. Celui relatif à Symfony est essentiel puisqu'il permet à PHPStan d'avoir accès et de pouvoir inspecter le conteneur de dépendances. Les autres ajoutent des règles supplémentaires. Bien sûr, vous êtes libres de les installer ou pas. Si vous commencer à utiliser PHPStan sur un ancien projet, il va surement détecter de nombreux problèmes. Dans ce cas, mon conseil est de commencer au niveau 0 puis de passer au suivant une fois que toutes les erreurs ont été corrigées. Prenez ça comme un jeu ! 😀
+
+            # configuration/phpstan.neon
+            includes:
+                # require phpstan/extension-installer to avoid inlcuding these lines
+                #- vendor/ekino/phpstan-banned-code/extension.neon     # https://github.com/ekino/phpstan-banned-code
+                #- vendor/phpstan/phpstan-symfony/extension.neon       # https://github.com/phpstan/phpstan-symfony
+                #- vendor/phpstan/phpstan-deprecation-rules/rules.neon # https://github.com/phpstan/phpstan-deprecation-rules
+                #- vendor/phpstan/phpstan-strict-rules/rules.neon      # https://github.com/phpstan/phpstan-strict-rules
+                #- vendor/phpstan/phpstan/phpstan-doctrine             # https://github.com/phpstan/phpstan-doctrine
+
+            parameters:
+                # https://phpstan.org/config-reference#rule-level
+                level: max
+
+                # https://phpstan.org/config-reference#analysed-files
+                # Note that I have put my configuraiton file in the "./configuration" directory
+                # if you have yours at the root of your project remove the "../"
+                paths:
+                    - ../config
+                    - ../src
+                    - ../tests
+                    - ../public
+
+                # https://github.com/phpstan/phpstan-symfony#configuration
+                # Specific configuration for the Sumfony plugin
+                symfony:
+                    # I use the prod env because I have false positive regarding the tests which
+                    # are executed in the test environment.
+                    container_xml_path: ../var/cache/prod/App_KernelProdDebugContainer.xml
+
+                # https://phpstan.org/config-reference#vague-typehints
+                checkMissingIterableValueType: true
+                checkGenericClassInNonGenericObjectType: true # this parameter is activated at level 6
+
+                # It's a special "dev" project, I have to ignore the following warnings because
+                # the use of this functions is intended.
+                # @see https://phpstan.org/user-guide/ignoring-errors
+                ignoreErrors:
+                    - '#Should not use node with type "Expr_Exit", please change the code.#' # warnings for "die()"
+                    - '#Should not use node with type "Stmt_Echo", please change the code.#' # warnings for "echo()"
+                    - '#Should not use function "print_r", please change the code.#'         # warnings for "print_r()"
+                    - '#Should not use function "var_dump", please change the code.#'        # warnings for "var_dump()"
+                    - '#Should not use function "phpinfo", please change the code.#'         # warnings for "phpinfo()"
+                    - '#Variable method call on#'                                            # dev blog!
+
+                # I don't use the Symfony PHPUnit bridge in this project, but if you do, you
+                # probably will have to add the following bootstrap file:
+                #bootstrapFiles:
+                    #- %rootDir%/../../../vendor/bin/.phpunit/phpunit/vendor/autoload.php
+
+    Annotations permettant de résoudre certaines erreurs de PHPStan (source Vidéo Grafikart sur PHPStan)
+
+        Si on veut créer une fonction qui revoie un objet du même type qu'un de ses paramètres  :
+        (documentation PHPSTAN -> template -> Generics)
+
+            T est le nom du template (arbitraire)
+
+            /**
+            * @template T of object
+            * @param T $obj
+            * @return T
+            */
+            function bidule($obj): object
+            {
+                return $obj;
+            }
+
+        Si on veut créer une fonction qui prend en paramètre un nom de classe et qui renvoie un objet de cette classe :
+
+           /**
+            * @template T of object
+            * @param class-string<T> $className
+            * @return T
+            */
+            function bidule($className): object
+            {
+                return $obj;
+            }
+
+        Si on veut créer un class collection qui stockera des objets d'une certaine Classe
+
+            // On indique que la classe Collection va utiliser un template T /
+
+            // T représentera les types de items collectés dans cette collection.
+
+            /**
+            * @template T
+            */
+            class Collection
+            {
+
+                /**
+                * @var array<T>
+                */
+                private array $items = [];
+
+                /**
+                * @param T $item
+                * @return Collection<T>
+                */
+                public function add($item): self
+                {
+                    $this->items[]=$item;
+                    return $this;
+                }
+
+                /**
+                * @return T|null
+                */
+                public function first(): ?self
+                {
+                    return $this->items[0] ?? null;
+                }
+            }
+
+            /**
+             * @var Collection<User> $collection
+             */            
+            $collection = new Collection();

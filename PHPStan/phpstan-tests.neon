@@ -1,0 +1,11 @@
+parameters:
+    level: 3
+
+    paths:
+        - ../tests
+        
+    symfony:
+        container_xml_path: ../var/cache/test/App_KernelTestDebugContainer.xml
+
+    doctrine:
+        objectManagerLoader: ./object-manager.php

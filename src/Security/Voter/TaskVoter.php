@@ -14,6 +14,7 @@ class TaskVoter extends Voter
 
     const TASK_EDIT = "task_edit";
     const TASK_DELETE = "task_delete";
+    private $security; 
 
     public function __construct(Security $security)
     {
@@ -30,6 +31,7 @@ class TaskVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $task, TokenInterface $token): bool
     {
+        /** @var User $user */
         $user = $token->getUser();
 
         // if the user is anonymous, do not grant access
@@ -45,12 +47,10 @@ class TaskVoter extends Voter
                 // logic to determine if the user can EDIT
                 // return true or false
                 return $this->canEdit($task, $user);
-                break;
             case self::TASK_DELETE:
                 // logic to determine if the user can VIEW
                 // return true or false
                 return $this->canDelete($task, $user);
-                break;
         }
         return false;
     }

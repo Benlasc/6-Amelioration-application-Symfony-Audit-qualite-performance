@@ -189,6 +189,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getDoneTasks(): array
     {
         $tasks = $this->tasks;
+        $tasksDone = [];
         foreach ($tasks as $task) {
             if ($task->isDone()) {
                 $tasksDone[]=$task;
@@ -200,6 +201,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getNotDoneTasks(): array
     {
         $tasks = $this->tasks;
+        $tasksNotDone = [];
         foreach ($tasks as $task) {
             if (!$task->isDone()) {
                 $tasksNotDone[]=$task;

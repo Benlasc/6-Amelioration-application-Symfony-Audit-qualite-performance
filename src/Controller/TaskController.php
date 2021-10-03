@@ -50,7 +50,7 @@ class TaskController extends AbstractController
      */
     public function create(Request $request): response
     {
-        $task = new Task($this->entityManager->getRepository(User::class));
+        $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
