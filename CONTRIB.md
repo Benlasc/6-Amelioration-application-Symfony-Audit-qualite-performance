@@ -10,7 +10,7 @@ More details on [the GitHub documentation](https://docs.github.com/en/get-starte
 
 ### 3/ Create a new branch
 Create a branch for your contribution, taking care to name it in a coherent and understandable way (in English preferably).
-Branch naming convention: <type>/<name> or <type>/<name>/<issue_ID>
+Branch naming convention: type/name or type/name/issue_ID
 Examples: feature/add-delete-user-action/17, fix/link-tasks-to-user, ...  
 Make your code changes, dividing into multiple commits if necessary. Write commit messages preferably in English.
 
