@@ -20,7 +20,7 @@ class UserControllerTest extends CustomWebTestCase
         $this->loadFixture();
         $user = $this->database['user_user'];
         $this->login($this->client, $user);
-        $crawler = $this->client->request('GET', '/users');
+        $this->client->request('GET', '/users');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
