@@ -18,7 +18,6 @@ daily tasks. The goal of this pedagogic project is to update, test and document 
   * [Install the project](#install-the-project)
   * [Create the database](#create-the-database)
 3.  __[Tests](#tests)__
-  * [Configure PHP Unit](#configure-php-unit)
   * [Run the tests](#run-the-tests)
 4. __[Contribution](#contribution)__
 
