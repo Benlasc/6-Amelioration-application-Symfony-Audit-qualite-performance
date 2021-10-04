@@ -23,7 +23,7 @@ class TaskControllerTest extends CustomWebTestCase
 
     public function testAuthorizedAccessForUser(): void
     {
-        $crawler = $this->UserRequest('GET', '/tasks');
+        $this->UserRequest('GET', '/tasks');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('body', 'Contenu de la première tâche');
         $this->assertSelectorTextContains('body', 'Contenu de la deuxième tâche');
@@ -32,7 +32,7 @@ class TaskControllerTest extends CustomWebTestCase
 
     public function testSeeDoneTaskForUser(): void
     {
-        $crawler = $this->UserRequest('GET', '/tasks?done=true');
+        $this->UserRequest('GET', '/tasks?done=true');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('body', 'Contenu de la première tâche');
         $this->assertSelectorTextNotContains('body', 'Contenu de la deuxième tâche');
@@ -40,7 +40,7 @@ class TaskControllerTest extends CustomWebTestCase
 
     public function testSeeOngoingTaskForUser(): void
     {
-        $crawler = $this->UserRequest('GET', '/tasks?done=false');
+        $this->UserRequest('GET', '/tasks?done=false');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('body', 'Contenu de la deuxième tâche');
         $this->assertSelectorTextNotContains('body', 'Contenu de la première tâche');
@@ -131,7 +131,7 @@ class TaskControllerTest extends CustomWebTestCase
 
     public function testUnauthorizedSetTaskDone(): void
     {
-        $crawler = $this->UserRequest('POST', 'tasks/1/toggle');
+        $this->UserRequest('POST', 'tasks/1/toggle');
 
         $this->assertResponseRedirects('/tasks');
 
@@ -174,7 +174,7 @@ class TaskControllerTest extends CustomWebTestCase
 
     public function testUnauthorizedUpdateTask(): void
     {
-        $crawler = $this->UserRequest('POST', 'tasks/1/edit');
+        $this->UserRequest('POST', 'tasks/1/edit');
 
         $this->assertResponseRedirects('/tasks');
 

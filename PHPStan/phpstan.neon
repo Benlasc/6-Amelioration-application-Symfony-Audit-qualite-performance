@@ -3,6 +3,7 @@ parameters:
 
     paths:
         - ../src
+        - ../public
         
     symfony:
         container_xml_path: ../var/cache/dev/App_KernelDevDebugContainer.xml

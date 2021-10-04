@@ -11,7 +11,7 @@ class UserControllerTest extends CustomWebTestCase
 
     public function testRedirectToLoginIfNotAuthenticated(): void
     {
-        $crawler = $this->client->request('GET', '/users');
+        $this->client->request('GET', '/users');
         $this->assertResponseRedirects('/login');
     }
 
@@ -26,7 +26,7 @@ class UserControllerTest extends CustomWebTestCase
 
     public function testAuthorizedAccessForAdmin(): void
     {
-        $crawler = $this->UserRequest('GET', '/users', null, 'admin');
+        $this->UserRequest('GET', '/users', null, 'admin');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Liste des utilisateurs');
     }

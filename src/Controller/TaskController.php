@@ -3,13 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Task;
-use App\Entity\User;
 use App\Form\TaskType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class TaskController extends AbstractController
 {
@@ -30,10 +29,10 @@ class TaskController extends AbstractController
             $tasks = $this->entityManager->getRepository(Task::class)->findAll();
         } else {
             $done = $request->query->get('done') ?? null;
-            if ($done !== null) {
-                if ($done === "true") {
+            if (null !== $done) {
+                if ('true' === $done) {
                     $tasks = $user->getDoneTasks();
-                } elseif ($done === "false") {
+                } elseif ('false' === $done) {
                     $tasks = $user->getNotDoneTasks();
                 } else {
                     $tasks = $user->getTasks();
@@ -42,6 +41,7 @@ class TaskController extends AbstractController
                 $tasks = $user->getTasks();
             }
         }
+
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
 
@@ -75,6 +75,7 @@ class TaskController extends AbstractController
     {
         if (!$this->isGranted('task_edit', $task)) {
             $this->addFlash('error', "Vous n'êtes pas l'auteur de cette tache.");
+
             return $this->redirectToRoute('task_list');
         }
 
@@ -103,6 +104,7 @@ class TaskController extends AbstractController
     {
         if (!$this->isGranted('task_edit', $task)) {
             $this->addFlash('error', "Vous n'êtes pas l'auteur de cette tache.");
+
             return $this->redirectToRoute('task_list');
         }
 
@@ -123,10 +125,10 @@ class TaskController extends AbstractController
      */
     public function deleteTask(Task $task, Request $request): response
     {
-        if ($this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
-
+        if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
             if (!$this->isGranted('task_delete', $task)) {
                 $this->addFlash('error', "Vous n'êtes pas l'auteur de cette tache.");
+
                 return $this->redirectToRoute('task_list');
             }
 
@@ -135,6 +137,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a bien été supprimée.');
         }
+
         return $this->redirectToRoute('task_list');
     }
 }

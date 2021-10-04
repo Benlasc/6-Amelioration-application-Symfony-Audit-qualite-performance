@@ -36,10 +36,6 @@ class CustomWebTestCase extends WebTestCase
      */
     public function UserRequest(string $method, string $url, ?array $post = null, string $role = 'user', ): Crawler
     {
-        // $this->database = $this->databaseTool->loadAliceFixture([
-        //     __DIR__ . '/fixtures/DataTestFixtures.yaml',
-        // ]);
-
         $this->database = ($this->database) ? 
             $this->database : 
             $this->databaseTool->loadAliceFixture([__DIR__ . '/fixtures/DataTestFixtures.yaml']) ;
@@ -50,9 +46,9 @@ class CustomWebTestCase extends WebTestCase
 
         if ($post && $method == 'POST') {
             return $this->client->request($method, $url, $post);
-        } else {
-            return $this->client->request($method, $url);
         }
+
+        return $this->client->request($method, $url);
     }
 
     public function loadFixture()

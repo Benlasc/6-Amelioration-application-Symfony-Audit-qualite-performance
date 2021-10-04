@@ -6,12 +6,11 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints\NotBlank;
+
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
@@ -99,13 +98,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($roles !== ['ROLE_ADMIN']) {
             $roles[] = 'ROLE_USER';
         }
+
         return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-        
+
         return $this;
     }
 
@@ -192,9 +192,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $tasksDone = [];
         foreach ($tasks as $task) {
             if ($task->isDone()) {
-                $tasksDone[]=$task;
+                $tasksDone[] = $task;
             }
         }
+
         return $tasksDone;
     }
 
@@ -204,9 +205,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $tasksNotDone = [];
         foreach ($tasks as $task) {
             if (!$task->isDone()) {
-                $tasksNotDone[]=$task;
+                $tasksNotDone[] = $task;
             }
         }
+
         return $tasksNotDone;
     }
 }

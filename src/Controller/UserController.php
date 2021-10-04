@@ -7,11 +7,11 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
@@ -43,7 +43,7 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {;
+        if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($this->encoder->hashPassword($user, $user->getPassword()));
 
             $this->entityManager->persist($user);
@@ -69,7 +69,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($this->encoder->hashPassword($user, $user->getPassword()));
             $role = $request->request->all()['user']['roles'];
-            $user->setRoles((array) $role );
+            $user->setRoles((array) $role);
             $this->entityManager->flush();
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
@@ -84,13 +84,12 @@ class UserController extends AbstractController
      */
     public function delete(User $user, Request $request): response
     {
-        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
-
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             // The tasks of deleted users are linked to the anonymous user
             $tasks = $user->getTasks();
             foreach ($tasks as $task) {
                 $anonymousUser = $this->entityManager->getRepository(User::class)->findByUsername('Utilisateur anonyme')[0];
-                /**
+                /*
                  * @var Task $task
                  */
                 $task->setUser($anonymousUser);

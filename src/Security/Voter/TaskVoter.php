@@ -11,10 +11,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskVoter extends Voter
 {
-
-    const TASK_EDIT = "task_edit";
-    const TASK_DELETE = "task_delete";
-    private $security; 
+    public const TASK_EDIT = 'task_edit';
+    public const TASK_DELETE = 'task_delete';
+    private $security;
 
     public function __construct(Security $security)
     {
@@ -39,7 +38,9 @@ class TaskVoter extends Voter
             return false;
         }
 
-        if ($this->security->isGranted('ROLE_ADMIN')) return true;
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
@@ -52,6 +53,7 @@ class TaskVoter extends Voter
                 // return true or false
                 return $this->canDelete($task, $user);
         }
+
         return false;
     }
 
