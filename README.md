@@ -5,7 +5,7 @@ daily tasks. The goal of this pedagogic project is to update, test and document 
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Benlasc/ToDoList/main)  
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6daac1aed7f5445b90cec2d86046b9ee)](https://www.codacy.com/gh/Benlasc/TodoList/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Benlasc/TodoList&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6daac1aed7f5445b90cec2d86046b9ee)](https://www.codacy.com/gh/Benlasc/TodoList/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Benlasc/TodoList&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/6daac1aed7f5445b90cec2d86046b9ee)](https://www.codacy.com/gh/Benlasc/TodoList/dashboard?utm_source=github.com&utm_medium=referral&utm_content=Benlasc/TodoList&utm_campaign=Badge_Coverage)
 
 ## Table of Contents
 1.  __[Prerequisite and technologies](#prerequisite-and-technologies)__
