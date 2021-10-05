@@ -21,9 +21,20 @@ jobs:
     #  To automatically get bug fixes and new Php versions for shivammathur/setup-php,
     # change this to (see https://github.com/shivammathur/setup-php#bookmark-versioning):
     # uses: shivammathur/setup-php@v2
+
     - uses: shivammathur/setup-php@2cb9b829437ee246e9b3cac53555a39208ca6d28
       with:
         php-version: '8.0'
+        extensions: blackfire, :xdebug
+        # Setup Blackfire Agent and CLI tool, Blackfire Player, and Symfony CLI
+        tools: blackfire, blackfire-player, symfony
+      env:
+        BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
+        BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
+        BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+        BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}        
+
+
     - uses: actions/checkout@v2
     - name: Copy .env.test.local
       run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
@@ -58,3 +69,12 @@ jobs:
       with:
         project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
         coverage-reports: ${{ github.workspace }}/tests/coverage.xml
+
+    - name: Symfony local server start
+      env:
+        APP_ENV: prod
+        APP_DEBUG: 0
+      run: |
+        symfony local:server:start -d # Start Symfony local webserver
+        # Run Blackfire Player scenarios from .blackfire.yaml or .bkf files
+        blackfire-player run --endpoint=http://localhost:8000 --blackfire-env="Environment name" .blackfire.yaml
