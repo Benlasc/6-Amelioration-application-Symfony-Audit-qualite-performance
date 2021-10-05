@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests\Entity;
 
 use App\Entity\Task;
@@ -9,7 +10,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TaskTest extends KernelTestCase
 {
-
     public function getEntity(): Task
     {
         return (new Task())
@@ -27,7 +27,7 @@ class TaskTest extends KernelTestCase
 
         /** @var ConstraintViolation $error */
         foreach ($errors as $error) {
-            $messages[]= $error->getPropertyPath() . '=>' . $error->getMessage();
+            $messages[] = $error->getPropertyPath().'=>'.$error->getMessage();
         }
         $this->assertCount($number, $errors, implode(', ', $messages));
     }
@@ -39,6 +39,6 @@ class TaskTest extends KernelTestCase
 
     public function testInvalidBlankEntity()
     {
-        $this->assertHasErrors($this->getEntity()->setTitle("")->setContent(""), 2);
+        $this->assertHasErrors($this->getEntity()->setTitle('')->setContent(''), 2);
     }
 }

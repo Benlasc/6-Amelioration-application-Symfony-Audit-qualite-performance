@@ -1,0 +1,27 @@
+tests:
+    "Tests spécifiques à Symfony":
+        path: "/.*"
+        assertions:
+            - metrics.symfony.kernel.debug.count == 0 # Vérifie qu'on est bien en mode production
+            - metrics.symfony.yaml.reads.count == 0 # Vérifie qu'on ne lit pas de fichiers YAML car ils devraient en cache
+            - metrics.symfony.config_check.count == 0 # Les métadonnées de la configuration Symfony devraint être placées en cache et pas récupérées pendant la production
+
+    "Tests spécifiques à Twig":
+        path: "/.*"
+        assertions:
+            - metrics.twig.compile.count == 0 # Pas de compilation en production, c'est une étape qui devrait être réalisée avant la production et mise en cache
+            - metrics.twig.attributes.get.count < 30 # Pas trop de logique dans les templates
+
+    "Tests spécifiques à Doctrine": # Vérifie que les annotations, les métadonnées des entitées et les classes proxies soient bien mises en cache en production
+        path: "/.*"
+        assertions:
+            - metrics.doctrine.annotations.parsed.count == 0
+            - metrics.doctrine.annotations.read.count == 0
+            - metrics.doctrine.entities.metadata.count == 0
+            - metrics.doctrine.proxies.generated.count == 0
+
+    "Tests de non régression":
+        path: "/.*"
+        assertions:
+            - percent(main.memory) < 5% # Contrôle de la consommation de mémoire
+            - diff(main.wall_time) < 0.1s # Contrôle du temps de chargement du script

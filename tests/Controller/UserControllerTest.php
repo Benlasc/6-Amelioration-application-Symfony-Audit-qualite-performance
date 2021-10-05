@@ -55,7 +55,7 @@ class UserControllerTest extends CustomWebTestCase
     // Email already used
     public function testfailedUserCreation1(): void
     {
-        $crawler = $this->UserRequest('GET', '/users/create', null, 'admin');      
+        $crawler = $this->UserRequest('GET', '/users/create', null, 'admin');
 
         $form = $crawler->selectButton('Ajouter')->form([
             'user[username]' => 'User4',
@@ -190,15 +190,15 @@ class UserControllerTest extends CustomWebTestCase
     // === User delete ===
 
     public function testSuccessfulUserDelete(): void
-    {      
+    {
         $crawler = $this->UserRequest('GET', '/users', null, 'admin');
 
         $csrfToken = $crawler->filter('input')->attr('value');
 
         //$csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('delete1');
-      
+
         $this->client->request('POST', '/users/3/delete', [
-            '_token' => $csrfToken
+            '_token' => $csrfToken,
         ]);
 
         $this->assertResponseRedirects('/users');

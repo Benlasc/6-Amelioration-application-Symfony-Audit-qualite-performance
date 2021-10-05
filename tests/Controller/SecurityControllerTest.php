@@ -12,7 +12,7 @@ class SecurityControllerTest extends CustomWebTestCase
         $this->client->request('GET', '/login');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('form', "Nom d'utilisateur :");
-        $this->assertSelectorTextContains('form', "Mot de passe :");
+        $this->assertSelectorTextContains('form', 'Mot de passe :');
         $this->assertSelectorNotExists('.alert.alert-success');
         $this->assertSelectorNotExists('.alert.alert-danger');
     }
@@ -33,7 +33,7 @@ class SecurityControllerTest extends CustomWebTestCase
     public function testSuccesfullLogin()
     {
         $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/../Utils/fixtures/DataTestFixtures.yaml',
+            __DIR__.'/../Utils/fixtures/DataTestFixtures.yaml',
         ]);
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form([
@@ -45,10 +45,10 @@ class SecurityControllerTest extends CustomWebTestCase
     }
 
     public function testRedirectToHomepageIfAuthenticated()
-    {       
+    {
         $this->UserRequest('GET', '/login');
 
         $this->assertResponseRedirects('/');
         $this->client->followRedirect();
-    }    
+    }
 }

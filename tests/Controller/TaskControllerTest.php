@@ -14,7 +14,7 @@ class TaskControllerTest extends CustomWebTestCase
 
     public function testAuthorizedAccessForAdmin(): void
     {
-        $this->UserRequest('GET', '/tasks', role:'admin', );
+        $this->UserRequest('GET', '/tasks', role: 'admin', );
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('body', 'Contenu de la première tâche');
         $this->assertSelectorTextContains('body', 'Contenu de la deuxième tâche');
@@ -146,14 +146,14 @@ class TaskControllerTest extends CustomWebTestCase
         $link = $crawler->selectLink('Créer une tâche')->link();
         $crawler = $this->client->click($link);
         $form = $crawler->selectButton('Ajouter')->form([
-            "task[title]" => "Tâche 4",
-            "task[content]" => "Contenu de la quatrième tâche",
+            'task[title]' => 'Tâche 4',
+            'task[content]' => 'Contenu de la quatrième tâche',
         ]);
         $crawler = $this->client->submit($form);
         $this->assertResponseRedirects('/tasks');
         $this->client->followRedirect();
-        $this->assertSelectorTextContains('body', "Tâche 4");
-        $this->assertSelectorTextContains('body', "Contenu de la quatrième tâche");
+        $this->assertSelectorTextContains('body', 'Tâche 4');
+        $this->assertSelectorTextContains('body', 'Contenu de la quatrième tâche');
     }
 
     public function testUpdateTask(): void
@@ -162,14 +162,14 @@ class TaskControllerTest extends CustomWebTestCase
         $link = $crawler->selectLink('Tâche 1')->link();
         $crawler = $this->client->click($link);
         $form = $crawler->selectButton('Modifier')->form([
-            "task[title]" => "Tâche 1 modifiée",
-            "task[content]" => "Contenu de la première tâche modifié",
+            'task[title]' => 'Tâche 1 modifiée',
+            'task[content]' => 'Contenu de la première tâche modifié',
         ]);
         $crawler = $this->client->submit($form);
         $this->assertResponseRedirects('/tasks');
         $this->client->followRedirect();
-        $this->assertSelectorTextContains('body', "Tâche 1 modifiée");
-        $this->assertSelectorTextContains('body', "Contenu de la première tâche modifié");
+        $this->assertSelectorTextContains('body', 'Tâche 1 modifiée');
+        $this->assertSelectorTextContains('body', 'Contenu de la première tâche modifié');
     }
 
     public function testUnauthorizedUpdateTask(): void
@@ -189,7 +189,7 @@ class TaskControllerTest extends CustomWebTestCase
 
         $this->UserRequest(
             'POST',
-             'users/3/delete', 
+             'users/3/delete',
              ['_token' => $csrfToken->getValue()],
              'admin'
         );
@@ -198,7 +198,7 @@ class TaskControllerTest extends CustomWebTestCase
 
         $crawler = $this->UserRequest('GET', 'tasks', null, 'admin');
 
-        $this->assertSelectorTextNotContains('body', "User1");
+        $this->assertSelectorTextNotContains('body', 'User1');
 
         $this->assertSame(3, $crawler->filter('p:contains("Utilisateur anonyme (anonyme@domain.com)")')->count());
     }

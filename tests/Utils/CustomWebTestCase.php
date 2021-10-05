@@ -2,16 +2,16 @@
 
 namespace App\Tests\Utils;
 
-use Symfony\Component\DomCrawler\Crawler;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Symfony\Component\DomCrawler\Crawler;
 
 class CustomWebTestCase extends WebTestCase
 {
     use NeedLogin;
 
-    /** @var KernelBrowser */  
+    /** @var KernelBrowser */
     protected $client;
 
     /** @var AbstractDatabaseTool */
@@ -26,25 +26,22 @@ class CustomWebTestCase extends WebTestCase
     }
 
     /**
-     * Get admin or normal user from the database test, authenticate him and execute the request
-     * @param string $role (user or admin)
-     * @param string $method (GET or POST)
-     * @param string $url
-     * @param array|null $post
+     * Get admin or normal user from the database test, authenticate him and execute the request.
      *
-     * @return Crawler
+     * @param string $role   (user or admin)
+     * @param string $method (GET or POST)
      */
     public function UserRequest(string $method, string $url, ?array $post = null, string $role = 'user', ): Crawler
     {
-        $this->database = ($this->database) ? 
-            $this->database : 
-            $this->databaseTool->loadAliceFixture([__DIR__ . '/fixtures/DataTestFixtures.yaml']) ;
+        $this->database = ($this->database) ?
+            $this->database :
+            $this->databaseTool->loadAliceFixture([__DIR__.'/fixtures/DataTestFixtures.yaml']);
 
-        $user = ($role == 'user') ? $this->database['user_user'] : $this->database['user_admin'] ;
+        $user = ('user' == $role) ? $this->database['user_user'] : $this->database['user_admin'];
 
         $this->login($this->client, $user);
 
-        if ($post && $method == 'POST') {
+        if ($post && 'POST' == $method) {
             return $this->client->request($method, $url, $post);
         }
 
@@ -54,7 +51,7 @@ class CustomWebTestCase extends WebTestCase
     public function loadFixture()
     {
         $this->database = $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/fixtures/DataTestFixtures.yaml',
+            __DIR__.'/fixtures/DataTestFixtures.yaml',
         ]);
     }
 }

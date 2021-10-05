@@ -21,7 +21,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testCount(): void
     {
         $this->databaseTool->loadAliceFixture([
-            __DIR__ . '/UserRepositoryTestFixtures.yaml', 
+            __DIR__.'/UserRepositoryTestFixtures.yaml',
         ]);
 
         $users = static::getContainer()->get(UserRepository::class)->count([]);

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests\Entity;
 
 use App\Entity\User;
@@ -9,7 +10,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserTest extends KernelTestCase
 {
-
     public function getEntity(): User
     {
         return (new User())
@@ -27,7 +27,7 @@ class UserTest extends KernelTestCase
 
         /** @var ConstraintViolation $error */
         foreach ($errors as $error) {
-            $messages[]= $error->getPropertyPath() . '=>' . $error->getMessage();
+            $messages[] = $error->getPropertyPath().'=>'.$error->getMessage();
         }
         $this->assertCount($number, $errors, implode(', ', $messages));
     }
@@ -39,12 +39,12 @@ class UserTest extends KernelTestCase
 
     public function testInvalidMailEntity()
     {
-        $this->assertHasErrors($this->getEntity()->setEmail("invalidMail@"), 1);
+        $this->assertHasErrors($this->getEntity()->setEmail('invalidMail@'), 1);
     }
 
     public function testInvalidBlankEntity()
     {
-        $this->assertHasErrors($this->getEntity()->setEmail("")->setUsername(""), 2);
+        $this->assertHasErrors($this->getEntity()->setEmail('')->setUsername(''), 2);
     }
 
     // Mail already used
@@ -53,9 +53,9 @@ class UserTest extends KernelTestCase
         $databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $databaseTool->loadAliceFixture([
-            __DIR__ . '/UserTestFixtures.yaml', 
+            __DIR__.'/UserTestFixtures.yaml',
         ]);
 
-        $this->assertHasErrors($this->getEntity()->setEmail("user1@domain.fr"), 1);
+        $this->assertHasErrors($this->getEntity()->setEmail('user1@domain.fr'), 1);
     }
 }
