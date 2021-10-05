@@ -33,6 +33,7 @@ jobs:
         BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
         BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
         BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}        
+        BLACKFIRE_AGENT_SOCKET: ${{ secrets.BLACKFIRE_AGENT_SOCKET }}        
 
 
     - uses: actions/checkout@v2
