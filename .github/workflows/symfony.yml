@@ -77,4 +77,4 @@ jobs:
       run: |
         symfony local:server:start -d # Start Symfony local webserver
         # Run Blackfire Player scenarios from .blackfire.yaml or .bkf files
-        blackfire-player run --endpoint=http://localhost:8000 --blackfire-env="Environment name" .blackfire.yml
+        blackfire curl "http://127.0.0.1:8000/login"

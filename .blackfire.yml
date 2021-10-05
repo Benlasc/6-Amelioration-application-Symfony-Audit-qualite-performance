@@ -31,7 +31,6 @@ scenarios: |
 
     scenario
         name 'Visitor'
-        blackfire "Environment name"
 
-        visit url('/')
+        visit url('/login')
             name 'Home page'
