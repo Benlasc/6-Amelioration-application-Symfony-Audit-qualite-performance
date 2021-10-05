@@ -25,3 +25,12 @@ tests:
         assertions:
             - percent(main.memory) < 5% # Contrôle de la consommation de mémoire
             - diff(main.wall_time) < 0.1s # Contrôle du temps de chargement du script
+
+scenarios: |
+    #!blackfire-player
+
+    scenario
+        name 'Visitor'
+
+        visit url('/')
+            name 'Home page'
