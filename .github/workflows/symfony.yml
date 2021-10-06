@@ -8,6 +8,11 @@ on:
 
 jobs:
   symfony-tests:
+    env:
+      BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
+      BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
+      BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+      BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}      
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -22,23 +27,16 @@ jobs:
     # change this to (see https://github.com/shivammathur/setup-php#bookmark-versioning):
     # uses: shivammathur/setup-php@v2
 
-    - uses: shivammathur/setup-php@2cb9b829437ee246e9b3cac53555a39208ca6d28
+    - uses: actions/checkout@v2
+
+    - uses: shivammathur/setup-php@v2
       with:
         php-version: '8.0'
         extensions: blackfire, :xdebug
-        # Setup Blackfire Agent and CLI tool, Blackfire Player, and Symfony CLI
-        tools: blackfire, blackfire-player, symfony
-      env:
-        BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
-        BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
-        BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
-        BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}        
-        BLACKFIRE_AGENT_SOCKET: ${{ secrets.BLACKFIRE_AGENT_SOCKET }}        
+        # Setup Blackfire Agent and CLI tool and Symfony CLI
+        tools: blackfire, symfony  
+        coverage: none    
 
-
-    - uses: actions/checkout@v2
-    - name: Copy .env.test.local
-      run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v2
@@ -51,31 +49,14 @@ jobs:
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Create Database
       run: |
-        php bin/console doctrine:database:create --if-not-exists --env=test
+        php bin/console doctrine:database:create --env=test
         php bin/console doctrine:schema:update --env=test --force
-
-    - name: Coding standards checks (php-cs-fixer)
-      run: vendor/bin/php-cs-fixer fix src --rules="@PSR1, @PSR12, @Symfony" --dry-run
-
-    - name: Static analysis of PHP code (PHPStan)
-      run: |
-        php bin/console cache:warmup --env=dev
-        vendor/bin/phpstan analyse -c PHPStan/phpstan.neon --memory-limit=1G
-
-    - name: Execute tests (Unit and Feature tests) via PHPUnit
-      run: vendor/bin/phpunit
-
-    - name: Run codacy-coverage-reporter
-      uses: codacy/codacy-coverage-reporter-action@v1
-      with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: ${{ github.workspace }}/tests/coverage.xml
-
     - name: Symfony local server start
       env:
         APP_ENV: prod
         APP_DEBUG: 0
       run: |
         symfony local:server:start -d # Start Symfony local webserver
-        # Run Blackfire Player scenarios from .blackfire.yaml or .bkf files
-        blackfire curl "http://127.0.0.1:8000/login"
+        sudo blackfire agent:config --server-id=$BLACKFIRE_SERVER_ID --server-token=$BLACKFIRE_SERVER_TOKEN
+        sudo /etc/init.d/blackfire-agent restart
+        blackfire -vvv curl http://127.0.0.1:8000/login
