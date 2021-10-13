@@ -53,7 +53,7 @@ jobs:
         php bin/console doctrine:schema:update --env=test --force
 
     - name: Coding standards checks (php-cs-fixer)
-      run: vendor/bin/php-cs-fixer fix src --rules="@PSR1, @PSR12, @Symfony" --dry-run -v --using-cache=no
+      run: vendor/bin/php-cs-fixer fix src --rules="@PSR1, @PSR12, @Symfony" --dry-run -v
 
     - name: Static analysis of PHP code (PHPStan)
       run: |

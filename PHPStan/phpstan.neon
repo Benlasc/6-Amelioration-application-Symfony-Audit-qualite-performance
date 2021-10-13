@@ -1,4 +1,11 @@
 parameters:
+    ignoreErrors:
+        -"#^Property App\\\\Entity\\\\User\\:\\:\\$email type mapping mismatch\\: property can contain string\\|null but database expects string\\.$#"
+
+        -"#^Property App\\\\Entity\\\\User\\:\\:\\$username type mapping mismatch\\: property can contain string\\|null but database expects string\\.$#"
+
+        -"#^Cannot access offset 'roles' on array\\<bool\\|float\\|int\\|string\\>\\|bool\\|float\\|int\\|string\\.$#"
+
     level: 5
 
     paths:

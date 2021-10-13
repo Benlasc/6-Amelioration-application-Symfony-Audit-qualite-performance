@@ -29,11 +29,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=25, unique=true)
      * @Assert\NotBlank(message="Vous devez saisir un nom d'utilisateur.")
      */
-    private string $username;
+    private ?string $username;
 
     /**
-     * @var array<string>
-     *                    ORM\Column(type="json")
+     * @var array<string> roles
+     * @ORM\Column(type="json")
      */
     private array $roles = [];
 
@@ -48,14 +48,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\NotBlank(message="Vous devez saisir une adresse email.")
      * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
      */
-    private string $email;
+    private ?string $email;
 
     /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user", cascade={"persist"})
      *
      * @var ArrayCollection<Task>
      */
-    private ArrayCollection $tasks;
+    private $tasks;
 
     public function __construct()
     {
@@ -75,7 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->username;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
@@ -155,7 +155,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
