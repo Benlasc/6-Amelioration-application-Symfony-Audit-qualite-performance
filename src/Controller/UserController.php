@@ -15,9 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    private $encoder;
+    private UserPasswordHasherInterface $encoder;
 
     public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $encoder)
     {
@@ -68,7 +68,10 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($this->encoder->hashPassword($user, $user->getPassword()));
+
+            /** @var array<string> $role */
             $role = $request->request->all()['user']['roles'];
+
             $user->setRoles((array) $role);
             $this->entityManager->flush();
             $this->addFlash('success', "L'utilisateur a bien été modifié");
@@ -84,10 +87,14 @@ class UserController extends AbstractController
      */
     public function delete(User $user, Request $request): response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+        /** @var string|null $token */
+        $token = $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $token)) {
             // The tasks of deleted users are linked to the anonymous user
             $tasks = $user->getTasks();
             foreach ($tasks as $task) {
+                
                 $anonymousUser = $this->entityManager->getRepository(User::class)->findByUsername('Utilisateur anonyme')[0];
                 /*
                  * @var Task $task

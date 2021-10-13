@@ -13,7 +13,7 @@ class TaskVoter extends Voter
 {
     public const TASK_EDIT = 'task_edit';
     public const TASK_DELETE = 'task_delete';
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
@@ -57,12 +57,12 @@ class TaskVoter extends Voter
         return false;
     }
 
-    private function canEdit(Task $task, User $user)
+    private function canEdit(Task $task, User $user): bool
     {
         return $user === $task->getUser();
     }
 
-    private function canDelete(Task $task, User $user)
+    private function canDelete(Task $task, User $user): bool
     {
         return $user === $task->getUser();
     }

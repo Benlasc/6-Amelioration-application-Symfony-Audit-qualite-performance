@@ -23,36 +23,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
      * @Assert\NotBlank(message="Vous devez saisir un nom d'utilisateur.")
      */
-    private $username;
+    private string $username;
 
     /**
-     * @ORM\Column(type="json")
+     * @var array<string> $roles
+     * ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="string", length=60, unique=true)
      * @Assert\NotBlank(message="Vous devez saisir une adresse email.")
      * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
      */
-    private $email;
+    private string $email;
 
     /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user", cascade={"persist"})
+     * @var ArrayCollection<Task> $tasks
      */
-    private $tasks;
+    private ArrayCollection $tasks;
 
     public function __construct()
     {
@@ -72,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->username;
     }
 
-    public function setUsername(?string $username): self
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -102,6 +104,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array<string> $roles
+     * 
+     * @return self
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -138,7 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -149,7 +156,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(?string $email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -178,17 +185,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->tasks->removeElement($task)) {
             // set the owning side to null (unless already changed)
-            if ($task->getUser() === $this) {
-                $task->setUser(null);
-            }
+            // if ($task->getUser() === $this) {
+            //     $task->setUser(null);
+            // }
         }
 
         return $this;
     }
 
+    /**
+     * @return array<Task>
+     */
     public function getDoneTasks(): array
     {
         $tasks = $this->tasks;
+
+        /** @var array<Task> $tasksDone */
         $tasksDone = [];
         foreach ($tasks as $task) {
             if ($task->isDone()) {
@@ -199,6 +211,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $tasksDone;
     }
 
+    /**
+     * @return array<Task>
+     */
     public function getNotDoneTasks(): array
     {
         $tasks = $this->tasks;

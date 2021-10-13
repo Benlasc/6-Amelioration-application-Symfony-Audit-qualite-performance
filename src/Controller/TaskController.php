@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Form\TaskType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TaskController extends AbstractController
 {
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -24,7 +25,9 @@ class TaskController extends AbstractController
      */
     public function list(Request $request): Response
     {
+        /** @var User $user  */
         $user = $this->getUser();
+
         if ($user->getRoles() === ['ROLE_ADMIN']) {
             $tasks = $this->entityManager->getRepository(Task::class)->findAll();
         } else {
@@ -53,10 +56,13 @@ class TaskController extends AbstractController
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
+        /** @var User $user */
+        $user = $this->getUser();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $task->setUser($this->getUser());
+            $task->setUser($user);
             $this->entityManager->persist($task);
             $this->entityManager->flush();
 
@@ -70,6 +76,7 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit"): response
+     * @return Response
      */
     public function edit(Task $task, Request $request)
     {
@@ -125,7 +132,11 @@ class TaskController extends AbstractController
      */
     public function deleteTask(Task $task, Request $request): response
     {
-        if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
+        
+        /** @var string|null $token */
+        $token = $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete'.$task->getId(), $token)) {
             if (!$this->isGranted('task_delete', $task)) {
                 $this->addFlash('error', "Vous n'êtes pas l'auteur de cette tache.");
 

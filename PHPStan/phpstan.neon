@@ -10,3 +10,5 @@ parameters:
 
     doctrine:
         objectManagerLoader: ./object-manager.php
+
+    checkGenericClassInNonGenericObjectType: false

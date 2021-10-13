@@ -10,14 +10,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    private $encoder;
+    private UserPasswordHasherInterface $encoder;
 
     public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->encoder = $encoder;
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $usersData = [
             0 => [
@@ -94,7 +94,10 @@ class UserFixtures extends Fixture
             $newUser = new User();
             $newUser->setUsername($user['userName']);
             $newUser->setEmail($user['email']);
-            $newUser->setPassword($this->encoder->hashPassword($newUser, $user['password']));
+
+            /** @var string $password */
+            $password = $user['password'];
+            $newUser->setPassword($this->encoder->hashPassword($newUser, $password));
             $newUser->setRoles($user['role']);
 
             foreach ($user['tasks'] as $taskInformations) {

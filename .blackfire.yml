@@ -5,6 +5,7 @@ tests:
             - metrics.symfony.kernel.debug.count == 0 # Vérifie qu'on est bien en mode production
             - metrics.symfony.yaml.reads.count == 0 # Vérifie qu'on ne lit pas de fichiers YAML car ils devraient en cache
             - metrics.symfony.config_check.count == 0 # Les métadonnées de la configuration Symfony devraint être placées en cache et pas récupérées pendant la production
+            - metrics.symfony.dotenv.parse.count == 0 # Ne pas analyser le fichier .env en production
 
     "Tests spécifiques à Twig":
         path: "/.*"
@@ -26,11 +27,13 @@ tests:
             - percent(main.memory) < 5% # Contrôle de la consommation de mémoire
             - diff(main.wall_time) < 0.1s # Contrôle du temps de chargement du script
 
-scenarios: |
-    #!blackfire-player
-
-    scenario
-        name 'Visitor'
-
-        visit url('/login')
-            name 'Home page'
+    'Le préchargement OPCache doit être configuré':
+        path:
+            - '/.*'
+        methods:
+            - ANY
+        command: '.*'
+        assertions:
+            - { label: null, expression: 'runtime.configuration.opcache_preload != ""' }
+        when: 'is_extension_loaded("zend_opcache")'
+        exclude: {  }
