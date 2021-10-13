@@ -25,7 +25,7 @@ class TaskController extends AbstractController
      */
     public function list(Request $request): Response
     {
-        /** @var User $user  */
+        /** @var User $user */
         $user = $this->getUser();
 
         if ($user->getRoles() === ['ROLE_ADMIN']) {
@@ -76,6 +76,7 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit"): response
+     *
      * @return Response
      */
     public function edit(Task $task, Request $request)
@@ -132,7 +133,6 @@ class TaskController extends AbstractController
      */
     public function deleteTask(Task $task, Request $request): response
     {
-        
         /** @var string|null $token */
         $token = $request->request->get('_token');
 

@@ -94,7 +94,6 @@ class UserController extends AbstractController
             // The tasks of deleted users are linked to the anonymous user
             $tasks = $user->getTasks();
             foreach ($tasks as $task) {
-                
                 $anonymousUser = $this->entityManager->getRepository(User::class)->findByUsername('Utilisateur anonyme')[0];
                 /*
                  * @var Task $task

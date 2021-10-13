@@ -32,8 +32,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $username;
 
     /**
-     * @var array<string> $roles
-     * ORM\Column(type="json")
+     * @var array<string>
+     *                    ORM\Column(type="json")
      */
     private array $roles = [];
 
@@ -52,7 +52,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user", cascade={"persist"})
-     * @var ArrayCollection<Task> $tasks
+     *
+     * @var ArrayCollection<Task>
      */
     private ArrayCollection $tasks;
 
@@ -106,8 +107,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @param array<string> $roles
-     * 
-     * @return self
      */
     public function setRoles(array $roles): self
     {

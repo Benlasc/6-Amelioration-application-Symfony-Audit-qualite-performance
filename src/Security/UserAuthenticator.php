@@ -34,7 +34,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         /** @var string $username */
         $username = $request->request->get('username', '');
 
-        /** @var string $password */        
+        /** @var string $password */
         $password = $request->request->get('password', '');
 
         $request->getSession()->set(Security::LAST_USERNAME, $username);
