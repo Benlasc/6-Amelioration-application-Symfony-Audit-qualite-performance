@@ -19,3 +19,4 @@ parameters:
         objectManagerLoader: ./object-manager.php
 
     checkGenericClassInNonGenericObjectType: false
+    reportUnmatchedIgnoredErrors: false
