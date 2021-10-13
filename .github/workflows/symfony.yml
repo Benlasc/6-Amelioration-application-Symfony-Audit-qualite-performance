@@ -58,7 +58,7 @@ jobs:
     - name: Static analysis of PHP code (PHPStan)
       run: |
         php bin/console cache:warmup --env=dev
-        vendor/bin/phpstan analyse -c PHPStan/phpstan.neon --memory-limit=1G
+        vendor/bin/phpstan analyse -c PHPStan/phpstan.neon --memory-limit=1G -v --using-cache=no
 
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: vendor/bin/phpunit
