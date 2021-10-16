@@ -150,7 +150,7 @@ class UserControllerTest extends CustomWebTestCase
             'user[email]' => '',
         ]);
         $crawler = $this->client->submit($form);
-        print_r($crawler);
+
         $this->assertEquals(2, $crawler->filter('.has-error')->count());
     }
 
