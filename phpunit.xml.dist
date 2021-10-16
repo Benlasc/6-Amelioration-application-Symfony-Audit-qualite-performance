@@ -23,8 +23,9 @@
         </include>
         <exclude>
             <directory>src/Kernel.php</directory>
+            <directory>src/DataFixtures</directory>
         </exclude>
-    </coverage>  
+    </coverage>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
