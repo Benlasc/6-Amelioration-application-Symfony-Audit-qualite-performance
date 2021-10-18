@@ -45,7 +45,7 @@
                 {% endif %}
 
                 {% if app.user %}
-                <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
+                <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger" style="margin: 15px;">Se déconnecter</a>
                 {% endif %}
 
                 {% if not app.user and 'login' != app.request.attributes.get('_route') %}
