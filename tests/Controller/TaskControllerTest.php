@@ -200,6 +200,6 @@ class TaskControllerTest extends CustomWebTestCase
 
         $this->assertSelectorTextNotContains('body', 'User1');
 
-        $this->assertSame(3, $crawler->filter('p:contains("Utilisateur anonyme (anonyme@domain.com)")')->count());
+        $this->assertSame(3, $crawler->filter('p:contains("anonyme@domain.com")')->count());
     }
 }
