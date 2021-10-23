@@ -18,6 +18,7 @@ daily tasks. The goal of this pedagogic project is to update, test and document 
   * [Install the project](#install-the-project)
   * [Create the database](#create-the-database)
 3.  __[Tests](#tests)__
+  * [Create the database for tests](#create-the-database-for-tests)
   * [Run the tests](#run-the-tests)
 4. __[Contribution](#contribution)__
 
@@ -78,6 +79,13 @@ Your database should be updated with fake tasks and users.
 
 ---
 ## TESTS
+
+### __Create the database for tests__
+
+```
+php bin/console doctrine:database:create --env=test 
+php bin/console doctrine:schema:update --env=test -–force 
+```
 
 ### __Run the tests__
 To run all tests, use the following command:
