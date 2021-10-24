@@ -40,9 +40,9 @@ Dependencies manager: __Composer ^2.1.8__
 
 ### __Quality and performance audit of the application__
 
-[Performance audit (Blackfire)](technical-documentation-and-audits/Audit_de_performance.pdf)
+[Performance audit (Blackfire)](Technical-documentation-and-audits/Audit_de_performance.pdf)
 
-[Quality audit (php-cs-fixer / PHPStan / Codacy / phpunit / GitHub Actions)](technical-documentation-and-audits/Audit_de_qualité.pdf)
+[Quality audit (php-cs-fixer / PHPStan / Codacy / phpunit / GitHub Actions)](Technical-documentation-and-audits/Audit_de_qualité.pdf)
 
 ---
 ## INSTALLATION
@@ -104,6 +104,6 @@ See more details and options about command-line test runner in [PHP Unit documen
 ---
 ## CONTRIBUTION
 
-See [the technical documentation](technical-documentation-and-audits/Documentation_technique.pdf).
+See [the technical documentation](Technical-documentation-and-audits/Documentation_technique.pdf).
 
 See [Contributing file](CONTRIB.md).
