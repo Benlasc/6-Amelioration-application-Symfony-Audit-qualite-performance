@@ -74,7 +74,7 @@ jobs:
         APP_ENV: prod
         APP_DEBUG: 0
       run: |
-        symfony local:server:start -d # Start Symfony local webserver
         sudo blackfire agent:config --server-id=$BLACKFIRE_SERVER_ID --server-token=$BLACKFIRE_SERVER_TOKEN
-        sudo systemctl restart blackfire-agent.service
+        sudo systemctl restart blackfire-agent
+        symfony local:server:start -d # Start Symfony local webserver
         blackfire -vvv curl http://127.0.0.1:8000/login
