@@ -12,6 +12,7 @@ daily tasks. The goal of this pedagogic project is to update, test and document 
 1.  __[Prerequisite and technologies](#prerequisite-and-technologies)__
   * [Server](#server)
   * [Framework and libraries](#framework-and-libraries)
+  * [Quality and performance audit of the application](#quality-and-performance-audit-of-the-application)
 2.  __[Installation](#installation)__
   * [Download or clone](#download-or-clone)
   * [Configure environment variables](#configure-environment-variables)
@@ -36,6 +37,12 @@ See more information on technical requirements in the [Symfony official document
 ### __Framework and libraries__
 Framework: __Symfony ^5.3__  
 Dependencies manager: __Composer ^2.1.8__  
+
+### __Quality and performance audit of the application__
+
+[Performance audit (Blackfire)](technical-documentation-and-audits/Audit_de_performance.pdf)
+
+[Quality audit (php-cs-fixer / PHPStan / Codacy / phpunit / GitHub Actions)](technical-documentation-and-audits/Audit_de_qualité.pdf)
 
 ---
 ## INSTALLATION
@@ -96,5 +103,7 @@ See more details and options about command-line test runner in [PHP Unit documen
 
 ---
 ## CONTRIBUTION
+
+See [the technical documentation](technical-documentation-and-audits/Documentation_technique.pdf).
 
 See [Contributing file](CONTRIB.md).
